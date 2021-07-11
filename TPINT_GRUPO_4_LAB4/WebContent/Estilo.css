@@ -1,0 +1,75 @@
+@charset "ISO-8859-1";
+
+
+
+
+body{
+	margin: 10px ;
+	background-color: #E6B0AA;
+	font-family: Perpetua;
+	font-size: 18px;
+	
+	
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #641E16;
+  top: 0;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #E74C3C;
+}
+
+.active {
+  background-color: #E74C3C;
+}
+
+/* Style the header */
+.header { 
+  margin: 10px;
+  padding: 12px 10px;
+  text-align: center;
+  background: #641E16;
+  color: white;
+  font-size: 20px;
+ 
+  
+}
+
+
+
+
+-------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
