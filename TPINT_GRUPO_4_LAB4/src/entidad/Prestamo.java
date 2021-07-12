@@ -100,6 +100,10 @@ public class Prestamo {
 		return new SimpleDateFormat("dd/MM/yyyy").format(this.fecha);
 	}
 
+	public Date getFechaDate() {
+		return fecha;
+	}
+	
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}

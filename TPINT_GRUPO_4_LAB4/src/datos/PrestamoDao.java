@@ -9,5 +9,6 @@ public interface PrestamoDao {
 
 	public List<Prestamo> obtenerPendientes();
 	public boolean cambiarEstado(int id, String estado);
+	public boolean agregarPrestamo(Prestamo p);
 	
 }
