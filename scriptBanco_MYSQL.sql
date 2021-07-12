@@ -1,6 +1,8 @@
 Create database FINAL_LAB_4;
 use FINAL_LAB_4;
 
+
+
 create table CLIENTES
 (
 DNI_Cli varchar(20) not null,
@@ -17,7 +19,7 @@ CorreoE_Cli varchar (50) null,
 Telefono_Cli varchar (20) null,
 Usuario_Cli varchar (20) not null,
 Contraseña_Cli varchar (20) not null,
-Estado_Cli bit not null default (0), 
+Estado_Cli bit not null default 0, 
 
 CONSTRAINT PK_DNI_CLIENTE PRIMARY KEY (DNI_Cli)
 );
@@ -48,7 +50,7 @@ Select '34877655', '20348776553', 'Raul', 'Gimenez', 'Otro', 'Bolivia',
 create table CUENTAS
 ( 
 DNI_Cu varchar(20) not null,
-Fec_creacion_Cu date default (CURRENT_DATE) null,
+Fec_creacion_Cu date null,
 TipoCuenta_Cu varchar (20) not null,
 Ncuenta_Cu int not null auto_increment,
 CBU_Cu varchar (20) not null,
@@ -59,3 +61,77 @@ CONSTRAINT PK_NCUENTA_CU PRIMARY KEY (Ncuenta_Cu)
 alter table CUENTAS
 add constraint FK_CLIENTE_CUENTAS foreign key (DNI_Cu)
 references CLIENTES (DNI_Cli);
+
+INSERT INTO CUENTAS (DNI_Cu, tipoCuenta_Cu, CBU_Cu)
+VALUES ('32078320','Cuenta corriente','275485725845'), ('32078320','Caja de ahorro','2468569347')
+,('32078320','Caja de ahorro','34213434'), ('40230980','Cuenta corriente','45415454')
+,('40230980','Cuenta corriente','676736767'), ('40230980','Caja de ahorro','1434345');
+
+CREATE TABLE PRESTAMOS
+( 
+	ID_Pr int(10) NOT NULL AUTO_INCREMENT,
+    Ncuenta_Pr int NOT NULL,
+    fecha_Pr date NULL,
+    importe_Int_Pr decimal(13,2) NOT NULL,
+    importe_Ped_Pr decimal(13,2) NOT NULL,
+    plazo_pago_Pr date NOT NULL,
+    montoxMes_Pr decimal(13,2) NOT NULL,
+    cuotas_Pr varchar(43) NOT NULL,
+    cuota_pagada_Pr varchar(43) NULL DEFAULT '0',
+    estado_Pr varchar(45) NOT NULL DEFAULT 'pendiente',
+    CONSTRAINT PK_ID_Pr PRIMARY KEY (ID_Pr)
+);
+
+
+
+ALTER TABLE PRESTAMOS
+ADD CONSTRAINT FK_PRESTAMOS_CUENTAS FOREIGN KEY (Ncuenta_Pr)
+REFERENCES CUENTAS (NCuenta_Cu);
+
+INSERT INTO PRESTAMOS (Ncuenta_Pr, importe_Int_Pr, importe_Ped_Pr, plazo_pago_Pr, montoxMes_Pr, cuotas_Pr)
+VALUES ('1','260000','200000','2022-1-12','43333','6'),('2','65000','50000','2022-7-12','5416.33','12')
+,('3','97500','75000','2022-7-12','8125','12');
+
+##PROCEDIMIENTOS ALMACENADOS
+
+DELIMITER $$
+CREATE PROCEDURE `Modificar_Estado_Prestamo`(IN ID INT(10), IN estado VARCHAR(45))
+BEGIN
+	UPDATE FINAL_LAB_4.PRESTAMOS SET estado_Pr = estado
+    WHERE ID_Pr = ID;
+END$$
+
+CREATE PROCEDURE `Sumar_Prestamo_A_Saldo`(IN monto DECIMAL(13,2), IN cuenta INT)
+BEGIN
+	UPDATE FINAL_LAB_4.CUENTAS SET Saldo_Cu = monto + Saldo_Cu
+    WHERE Ncuenta_Cu = cuenta;
+END$$
+
+CREATE PROCEDURE `Nuevo_Prestamo` (IN NCuenta INT(11), IN DNI varchar(45), IN fecha DATE, IN importe_Int DECIMAL(13,2), IN importe_Ped DECIMAL(13,2), IN montoxmes DECIMAL(13,2), IN cuotas INT)
+BEGIN
+	##Modificar para hacer que el dni se ingrese automaticamente segun el n cuenta
+	INSERT INTO PRESTAMOSS(NCuenta_Pr, DNI_Pr, fecha_Pr, importe_Int_Pr, importe_Ped_Pr, plazo_pago_Pr, montoxmes_Pr, cuotas_Pr, cuota_pagada_Pr, estado_Pr)
+    VALUE (NCuenta, DNI, fecha, importe_Int, importe_Ped, DATE_ADD(fecha, INTERVAL cuotas month), montoxmes, cuotas, '0', 'pendiente') ;
+
+END$$
+
+
+##TRIGGERS
+
+CREATE TRIGGER `FINAL_LAB_4`.`PRESTAMOS_AFTER_UPDATE` AFTER UPDATE ON `PRESTAMOS` FOR EACH ROW
+BEGIN
+	IF NEW.estado_Pr = 'aprobado'
+		THEN
+			CALL Sumar_Prestamo_A_Saldo(NEW.importe_Ped_Pr, NEW.Ncuenta_Pr);
+            ##Agregar procedimiento para que al mismo tiempo que se ingresa la suma de dinero
+            ##se crean los registros para la tabla cuotas paga
+	END IF;
+END$$
+
+CREATE TRIGGER `FINAL_LAB_4`.`CUENTAS_SET_FECHA` BEFORE INSERT ON `CUENTAS` 
+FOR EACH ROW 
+SET NEW.Fec_creacion_Cu = IFNULL(NEW.Fec_creacion_Cu,NOW());
+
+CREATE TRIGGER `FINAL_LAB_4`.`PRESTAMOS_SET_FECHA` BEFORE INSERT ON `PRESTAMOS` 
+FOR EACH ROW 
+SET NEW.fecha_Pr = IFNULL(NEW.Fecha_Pr,NOW());
