@@ -1,7 +1,7 @@
 
 
 <%@page import="java.util.ArrayList"%>
-<%@page import="presentacion.controller.ServletGestorPrestamo" %>
+<%@page import="presentacion.controller.ServletPrestamos" %>
 <%@page import="entidad.Prestamo" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
     
@@ -14,7 +14,7 @@
 	<jsp:include page="Menu.html"></jsp:include>
 	
 		<center>
-		<form method="get" action="ServletGestorPrestamo">
+		<form method="get" action="ServletPrestamos">
 			<%! String advertencia=""; %>
 			<%
 				if(request.getAttribute("label") != null){

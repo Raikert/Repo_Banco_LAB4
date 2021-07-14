@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import datos.*;
 import datosImpl.*;
+import entidad.Prestamo;
+import negocio.PrestamoNeg;
+import negocioImpl.PrestamoNegImpl;
 
 
 /**
@@ -21,9 +24,10 @@ import datosImpl.*;
 public class ServletPrestamos extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+	private PrestamoNeg prestamo = new PrestamoNegImpl();
+	ArrayList<Prestamo> prestamosPendientes = new ArrayList<Prestamo>();
+	
+	
     public ServletPrestamos() {
         super();
         // TODO Auto-generated constructor stub
@@ -33,8 +37,31 @@ public class ServletPrestamos extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		if(request.getParameter("btnModificar")!=null) {
+			int id;
+			if(request.getParameter("txtPrestamo")== "") {
+				id = 0;
+			} else {
+				id = Integer.parseInt(request.getParameter("txtPrestamo"));
+			}
+			String estado = request.getParameter("estado");
+			boolean exito=false;
+			for (Prestamo p : prestamosPendientes) {
+				if (id==p.getId()) {
+					exito = prestamo.cambiarEstado(id, estado);
+					
+				}
+			}
+			if(exito) {
+				request.setAttribute("label", "El prestamo fue modificado con exito!");
+			} else {
+				request.setAttribute("label", "Ingrese un ID de un prestamo pendiente existente");
+			}
+			prestamosPendientes = prestamo.obtenerPendientes();
+			request.setAttribute("lista", prestamosPendientes);
+			RequestDispatcher rd = request.getRequestDispatcher("/GestorPrestamos.jsp");
+			rd.forward(request, response);
+		}
 	}
 
 	/**
@@ -44,7 +71,6 @@ public class ServletPrestamos extends HttpServlet {
 		ArrayList<Integer> prestamos = new ArrayList<Integer>();
 		if(request.getParameter("Cargar3")!=null)
 		{
-			PrestamosDao pdao = new PrestamosDaoImpl();
 			String ini;
 			String fin;
 			double mmin;
@@ -80,14 +106,21 @@ public class ServletPrestamos extends HttpServlet {
 			}
 			cuotas=Integer.parseInt(request.getParameter("cuotas"));
 			
-			prestamos.add(pdao.Cant_Prestamos(ini, fin, mmin, mmax, cuotas));
-			prestamos.add(pdao.Cant_Activos(ini, fin, mmin, mmax, cuotas));
-			prestamos.add(pdao.Cant_Pendientes(ini, fin, mmin, mmax, cuotas));
-			prestamos.add(pdao.Cant_Rechazados(ini, fin, mmin, mmax, cuotas));
-			prestamos.add(pdao.Cant_Pagos(ini, fin, mmin, mmax, cuotas));
-			prestamos.add(pdao.Promedio(ini, fin, mmin, mmax, cuotas));
+			prestamos.add(prestamo.Cant_Prestamos(ini, fin, mmin, mmax, cuotas));
+			prestamos.add(prestamo.Cant_Activos(ini, fin, mmin, mmax, cuotas));
+			prestamos.add(prestamo.Cant_Pendientes(ini, fin, mmin, mmax, cuotas));
+			prestamos.add(prestamo.Cant_Rechazados(ini, fin, mmin, mmax, cuotas));
+			prestamos.add(prestamo.Cant_Pagos(ini, fin, mmin, mmax, cuotas));
+			prestamos.add(prestamo.Promedio(ini, fin, mmin, mmax, cuotas));
 			request.setAttribute("prestamos", prestamos);
 			RequestDispatcher rd = request.getRequestDispatcher("Estadisticas.jsp");
+			rd.forward(request, response);
+		}
+		
+		if(request.getParameter("btnCargar")!=null) {
+			prestamosPendientes = prestamo.obtenerPendientes();
+			request.setAttribute("lista", prestamosPendientes);
+			RequestDispatcher rd = request.getRequestDispatcher("/GestorPrestamos.jsp");
 			rd.forward(request, response);
 		}
 	}

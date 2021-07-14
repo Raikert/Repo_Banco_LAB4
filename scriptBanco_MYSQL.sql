@@ -115,6 +115,104 @@ BEGIN
 
 END$$
 
+CREATE PROCEDURE `Contar_Cantidad_Prestamos_Cuotas` (IN ini DATE, in fin DATE, IN monmin DECIMAL(13,2), IN monmax DECIMAL(13,2), IN cuotas VARCHAR(43))
+BEGIN
+	SELECT COUNT(ID_Pr) FROM PRESTAMOS
+    WHERE fecha_Pr >= ini 
+    AND fecha_Pr <= fin
+    AND importe_Int_Pr >= monmin 
+    AND importe_Int_Pr < minmax
+    AND cuotas_Pr = cuotas;
+END$$
+
+CREATE PROCEDURE `Contar_Cantidad_Prestamos` (IN ini DATE, in fin DATE, IN monmin DECIMAL(13,2), IN monmax DECIMAL(13,2))
+BEGIN
+	SELECT COUNT(ID_Pr) FROM prestamos
+    WHERE fecha_Pr >= ini 
+    AND fecha_Pr <= fin
+    AND importe_Int_Pr >= monmin
+    AND importe_Int_Pr < minmax;
+END$$
+
+CREATE PROCEDURE `Contar_Cantidad_Prestamos_Pagos_Cuotas` (IN ini DATE, in fin DATE, IN monmin DECIMAL(13,2), IN monmax DECIMAL(13,2), IN cuotas VARCHAR(43))
+BEGIN
+
+	SELECT COUNT(ID_Pr) FROM prestamos
+    WHERE fecha_Pr >= ini AND fecha_Pr <= fin AND importe_Int_Pr >= monmin AND importe_Int_Pr < minmax AND cuotas_Pr = cuotas AND estado_Pr = 'pago';
+
+END$$
+
+CREATE PROCEDURE `Contar_Cantidad_Prestamos_Pagos` (IN ini DATE, in fin DATE, IN monmin DECIMAL(13,2), IN monmax DECIMAL(13,2))
+BEGIN
+
+	SELECT COUNT(ID_Pr) FROM prestamos
+    WHERE fecha_Pr >= ini AND fecha_Pr <= fin AND importe_Int_Pr >= monmin AND importe_Int_Pr < minmax AND estado_Pr = 'pago';
+
+END$$
+
+CREATE PROCEDURE `Contar_Cantidad_Prestamos_Pendientes_Cuotas` (IN ini DATE, in fin DATE, IN monmin DECIMAL(13,2), IN monmax DECIMAL(13,2), IN cuotas VARCHAR(43))
+BEGIN
+
+	SELECT COUNT(ID_Pr) FROM prestamos
+    WHERE fecha_Pr >= ini AND fecha_Pr <= fin AND importe_Int_Pr >= monmin AND importe_Int_Pr < minmax AND cuotas_Pr = cuotas AND estado_Pr = 'pendiente';
+
+END$$
+
+CREATE PROCEDURE `Contar_Cantidad_Prestamos_Pendientes` (IN ini DATE, in fin DATE, IN monmin DECIMAL(13,2), IN monmax DECIMAL(13,2))
+BEGIN
+
+	SELECT COUNT(ID_Pr) FROM prestamos
+    WHERE fecha_Pr >= ini AND fecha_Pr <= fin AND importe_Int_Pr >= monmin AND importe_Int_Pr < minmax AND estado_Pr = 'pendiente';
+
+END$$
+
+CREATE PROCEDURE `Contar_Cantidad_Prestamos_Rechazados_Cuotas` (IN ini DATE, in fin DATE, IN monmin DECIMAL(13,2), IN monmax DECIMAL(13,2), IN cuotas VARCHAR(43))
+BEGIN
+
+	SELECT COUNT(ID_Pr) FROM prestamos
+    WHERE fecha_Pr >= ini AND fecha_Pr <= fin AND importe_Int_Pr >= monmin AND importe_Int_Pr < minmax AND cuotas_Pr = cuotas AND estado_Pr = 'rechazado';
+
+END$$
+
+CREATE PROCEDURE `Contar_Cantidad_Prestamos_Rechazados` (IN ini DATE, in fin DATE, IN monmin DECIMAL(13,2), IN monmax DECIMAL(13,2))
+BEGIN
+
+	SELECT COUNT(ID_Pr) FROM prestamos
+    WHERE fecha_Pr >= ini AND fecha_Pr <= fin AND importe_Int_Pr >= monmin AND importe_Int_Pr < minmax AND estado_Pr = 'rechazado';
+
+END$$
+
+CREATE PROCEDURE `Contar_Cantidad_Prestamos_Aprobados_Cuotas` (IN ini DATE, in fin DATE, IN monmin DECIMAL(13,2), IN monmax DECIMAL(13,2), IN cuotas VARCHAR(43))
+BEGIN
+
+	SELECT COUNT(ID_Pr) FROM prestamos
+    WHERE fecha_Pr >= ini AND fecha_Pr <= fin AND importe_Int_Pr >= monmin AND importe_Int_Pr < minmax AND cuotas_Pr = cuotas AND estado_Pr = 'aprobado';
+
+END$$
+
+CREATE PROCEDURE `Contar_Cantidad_Prestamos_Aprobados` (IN ini DATE, in fin DATE, IN monmin DECIMAL(13,2), IN monmax DECIMAL(13,2))
+BEGIN
+
+	SELECT COUNT(ID_Pr) FROM prestamos
+    WHERE fecha_Pr >= ini AND fecha_Pr <= fin AND importe_Int_Pr >= monmin AND importe_Int_Pr < minmax AND estado_Pr = 'aprobado';
+
+END$$
+
+CREATE PROCEDURE `Obtener_Promedio_Prestamos_Cuotas` (IN ini DATE, in fin DATE, IN monmin DECIMAL(13,2), IN monmax DECIMAL(13,2), IN cuotas VARCHAR(43))
+BEGIN
+
+	SELECT importe_Int_Pr FROM prestamos
+    WHERE fecha_Pr >= ini AND fecha_Pr <= fin AND importe_Int_Pr >= monmin AND importe_Int_Pr < minmax AND cuotas_Pr = cuotas;
+
+END$$
+
+CREATE PROCEDURE `Obtener_Promedio_Prestamos` (IN ini DATE, in fin DATE, IN monmin DECIMAL(13,2), IN monmax DECIMAL(13,2))
+BEGIN
+
+	SELECT importe_Int_Pr FROM prestamos
+    WHERE fecha_Pr >= ini AND fecha_Pr <= fin AND importe_Int_Pr >= monmin AND importe_Int_Pr < minmax;
+
+END$$
 
 ##TRIGGERS
 

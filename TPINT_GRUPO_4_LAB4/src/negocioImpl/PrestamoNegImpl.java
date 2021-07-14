@@ -41,6 +41,42 @@ public class PrestamoNegImpl implements PrestamoNeg {
 		return prDao.agregarPrestamo(p);
 	}
 
+
+	@Override
+	public int Cant_Prestamos(String ini, String fin, double monmin, double monmax, int cuotas) {
+		return prDao.Cant_Prestamos(ini, fin, monmin, monmax, cuotas);
+	}
+
+
+	@Override
+	public int Cant_Pagos(String ini, String fin, double monmin, double monmax, int cuotas) {
+		return prDao.Cant_Pagos(ini, fin, monmin, monmax, cuotas);
+	}
+
+
+	@Override
+	public int Cant_Pendientes(String ini, String fin, double monmin, double monmax, int cuotas) {
+		return prDao.Cant_Pendientes(ini, fin, monmin, monmax, cuotas);
+	}
+
+
+	@Override
+	public int Cant_Rechazados(String ini, String fin, double monmin, double monmax, int cuotas) {
+		return prDao.Cant_Rechazados(ini, fin, monmin, monmax, cuotas);
+	}
+
+
+	@Override
+	public int Cant_Activos(String ini, String fin, double monmin, double monmax, int cuotas) {
+		return prDao.Cant_Activos(ini, fin, monmin, monmax, cuotas);
+	}
+
+
+	@Override
+	public int Promedio(String ini, String fin, double monmin, double monmax, int cuotas) {
+		return prDao.Promedio(ini, fin, monmin, monmax, cuotas);
+	}
+
 	
 	
 	
