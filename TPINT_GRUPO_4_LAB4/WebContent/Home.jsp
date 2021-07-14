@@ -7,7 +7,7 @@
 <script src="https://kit.fontawesome.com/7181f6836f.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<jsp:include page="Menu.html"></jsp:include>
+<jsp:include page="Menu2.html"></jsp:include>
 <center>
 <h1><center>Bienvenido Ramiro Deocares</center></h1>
 <br>
