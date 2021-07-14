@@ -28,37 +28,7 @@ public class ServletClientes extends HttpServlet
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-		if (request.getParameter("inicio")!=null)
-		{
-			RequestDispatcher dispatcher = request.getRequestDispatcher("Home.jsp");
-			dispatcher.forward(request, response);
-		}
-		if (request.getParameter("BtHistorial")!=null)
-		{
-			RequestDispatcher dispatcher = request.getRequestDispatcher("Historial.jsp");
-			dispatcher.forward(request, response);
-		}
-		if (request.getParameter("btTransferencias")!=null)
-		{
-			RequestDispatcher dispatcher = request.getRequestDispatcher("Transferencias.jsp");
-			dispatcher.forward(request, response);
-		}
-		if (request.getParameter("btSolicitarPrestamo")!=null)
-		{
-			RequestDispatcher dispatcher = request.getRequestDispatcher("GestorPrestamos.jsp");
-			dispatcher.forward(request, response);
-		}
-		if (request.getParameter("btPrestamosPedidos")!=null)
-		{
-			RequestDispatcher dispatcher = request.getRequestDispatcher("PrestamoPedido.jsp");
-			dispatcher.forward(request, response);
-		}
-		if (request.getParameter("btPagarCuotas")!=null)
-		{
-			RequestDispatcher dispatcher = request.getRequestDispatcher("PagarCuota.jsp");
-			dispatcher.forward(request, response);
-		}
-		
+
 		if(request.getParameter("generar") != null)
 		{
 			Cliente cliente = new Cliente();
@@ -88,7 +58,7 @@ public class ServletClientes extends HttpServlet
 		{
 			if (request.getParameter("user").equals("admin") && request.getParameter("pass").equals("admin")) 
 			{
-		    	RequestDispatcher dispatcher = request.getRequestDispatcher("Home.jsp");
+		    	RequestDispatcher dispatcher = request.getRequestDispatcher("HomeAdmin.jsp");
 				dispatcher.forward(request, response);
 			}
 			else 
@@ -103,7 +73,7 @@ public class ServletClientes extends HttpServlet
 					
 					if (y.getUsuario().equals(request.getParameter("user")) && y.getContraseña().equals(request.getParameter("pass"))) 
 					{
-						RequestDispatcher dispatcher = request.getRequestDispatcher("Index.jsp");
+						RequestDispatcher dispatcher = request.getRequestDispatcher("Home.jsp");
 						dispatcher.forward(request, response);
 					}
 				} 
