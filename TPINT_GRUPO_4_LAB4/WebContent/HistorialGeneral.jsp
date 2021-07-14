@@ -6,7 +6,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
-<jsp:include page="Menu.html"></jsp:include>
 <center>
 <h1>Historial de Movimientos</h1>
 <div style="display:flex; align-items: flex-end; width: 100%;">

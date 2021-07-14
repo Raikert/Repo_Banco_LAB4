@@ -8,7 +8,7 @@
 </head>
 <body>
 <center>
-<jsp:include page="Menu2.html"></jsp:include>
+<jsp:include page="Menu.html"></jsp:include>
 <h1>Historial de Movimientos</h1>
 <div style="display:flex; align-items: flex-end; width: 100%;">
 <div style="height: 100%; width: 40%; text-align:center; float:left;">
