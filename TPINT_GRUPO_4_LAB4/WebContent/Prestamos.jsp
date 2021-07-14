@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
+<jsp:include page="Menu2.html"></jsp:include>
 <center>
 <h1>Solicitar Prestamos</h1>
 <br>

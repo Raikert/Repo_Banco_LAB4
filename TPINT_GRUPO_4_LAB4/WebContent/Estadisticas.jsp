@@ -12,6 +12,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
+<jsp:include page="Menu.html"></jsp:include>
 <center>
 <h1>Estadisticas</h1>
 <br>
