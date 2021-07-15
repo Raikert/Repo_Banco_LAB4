@@ -9,8 +9,8 @@ import entidad.*;
 import datosImpl.*;
 public class CuentasDaoImpl implements CuentasDao{
 
-	private static final String cantidad= "Select count(Dni) from cuentas where Fecha >= ? and Fecha < ? and Saldo >= ? and Saldo <? and Tipo_Cuenta!=?";
-	private static final String saldo= "Select Saldo from cuentas where Fecha >= ? and Fecha < ? and Saldo >= ? and Saldo <? and Tipo_Cuenta!=?";
+	private static final String cantidad= "Select count(DNI_Cu) from cuentas where Fec_creacion_Cu >= ? and Fec_creacion_Cu < ? and Saldo_Cu >= ? and Saldo_Cu <? and TipoCuenta_Cu!=?";
+	private static final String saldo= "Select Saldo_Cu from cuentas where Fec_creacion_Cu >= ? and Fec_creacion_Cu < ? and Saldo_Cu >= ? and Saldo_Cu <? and TipoCuenta_Cu!=?";
 
 
 	public CuentasDaoImpl() {

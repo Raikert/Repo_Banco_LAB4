@@ -17,8 +17,8 @@ public class MovimientosDaoImpl implements MovimientosDao  {
 	private static final String egresos= "select Importe from movimientos WHERE Tipo_Movimiento = 'alta prestamo' and Fecha >= ? and Fecha < ?";
 	private static final String Ingresos= "select Importe from movimientos WHERE Tipo_Movimiento != 'alta prestamo' and Tipo_Movimiento != 'Transferencia' and Fecha >= ? and Fecha < ?";
 	private static final String bclientes= "select DNI_Cli from clientes";
-	private static final String bcuentast= "select Numero_Cuenta from cuentas";
-	private static final String bcuentas= "select Numero_Cuenta from cuentas where Dni=?";
+	private static final String bcuentast= "select Ncuenta_Cu from cuentas";
+	private static final String bcuentas= "select Ncuenta_Cu from cuentas where DNI_Cu=?";
 	private static final String bhistorialg= "select * from movimientos where Tipo_Movimiento=? and Importe>=? and Importe<=? and Fecha>=? and Fecha<=? and Origen=? limit ?";
 
 	
@@ -180,7 +180,7 @@ public class MovimientosDaoImpl implements MovimientosDao  {
 				
 				while(rs.next())
 				{
-					lista.add(rs.getInt("Numero_Cuenta"));
+					lista.add(rs.getInt("Ncuenta_Cu"));
 				}		
 			} 
 			catch (SQLException e) 
@@ -203,7 +203,7 @@ public class MovimientosDaoImpl implements MovimientosDao  {
 				rs = st.executeQuery(bcuentast);
 				while(rs.next()) {
 
-					lista.add(rs.getInt("Numero_Cuenta"));	
+					lista.add(rs.getInt("Ncuenta_Cu"));	
 				}
 			} catch (SQLException e) { 
 				e.printStackTrace();
