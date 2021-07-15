@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import datos.*;
 import datosImpl.*;
+import entidad.Cuentas;
+import entidad.CuentasAdmDao;
 
 /**
  * Servlet implementation class ServletCuentas
@@ -32,8 +34,32 @@ public class ServletCuentas extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		int filas=0;
+		if(request.getParameter("crear")!=null){
+			Cuentas c = new Cuentas();
+			c.setDNI(request.getParameter("TxtDni"));
+			c.setTipo(request.getParameter("DdlTipo"));
+			c.setCbu(request.getParameter("TxtCbu"));
+			CuentasAdmDao Ucuenta= new CuentasAdmDao();
+			filas = Ucuenta.agregarCuenta(c);
+			request.setAttribute("cantfilas", filas);
+			RequestDispatcher rd = request.getRequestDispatcher("/AdminCuenta.jsp");
+			rd.forward(request, response);
+			
+		}
+		
+		if(request.getParameter("Modificar")!=null){
+			Cuentas c = new Cuentas();
+			c.setTipo(request.getParameter("dlltipoupdate"));
+			c.setCbu(request.getParameter("TxtCbu2"));
+			c.setNcuenta(Integer.parseInt(request.getParameter("ddlNcuenta")));
+			CuentasAdmDao Ucuenta= new CuentasAdmDao();
+			filas = Ucuenta.modificarCuenta(c);
+			request.setAttribute("cantfilas", filas);
+			RequestDispatcher rd = request.getRequestDispatcher("/AdminCuenta.jsp");
+			rd.forward(request, response);
+			
+		}
 	}
 
 	/**
