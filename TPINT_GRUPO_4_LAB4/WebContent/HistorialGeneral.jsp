@@ -1,5 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+     <%@page import="java.util.ArrayList"%>
+    <%@page import="datos.MovimientosDao"%>
+    <%@page import="datosImpl.MovimientosDaoImpl"%>
+    <%@page import="entidad.Movimientos"%>
+     
+     <% 
+   	MovimientosDao o = new MovimientosDaoImpl();
+	ArrayList<String> lista = new ArrayList<String>();
+	ArrayList<Integer> lista2 = new ArrayList<Integer>();
+	lista.addAll(o.HistorialGeneral());
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -11,32 +22,43 @@
 <h1>Historial de Movimientos</h1>
 <div style="display:flex; align-items: flex-end; width: 100%;">
 <div style="height: 100%; width: 40%; text-align:center; float:left;">
-<form action="Home.jsp" method="POST" style="text-align:center;">
-	<b>Seleeciones un cliente: </b>
+<form action="ServletMovimientos" method="post" style="text-align:center;">
+	<b>Seleciones un cliente: </b>
 	<select name="cliente">
-		<option>Todos</option>
-		<option>512</option>
-		<option>125</option>
-		<option>338</option>
+		<option value="todos">Todos</option>
+		<% for(int i=0;i<lista.size();i++){
+			 %>
+			<option value="<%= lista.get(i) %>"><%=lista.get(i)%></option>
+		 <%}%>
 	</select>
 	<input type="submit" name="cargar" value="Cargar">
+</form>
+<form action="ServletMovimientos" method="post" style="text-align:center;">
 	<br>
 	<br>
-	<b>Seleecione una cuenta: </b>
+	<% 
+		String cl;
+		if(request.getAttribute("cl")!=null){
+			cl=(String)request.getAttribute("cl");
+			lista2.addAll(o.CuentasHG(cl));
+		}
+	%>
+	<b>Selecione una cuenta: </b>
 	<select name="cuenta">
-		<option>Todas</option>
-		<option>108</option>
-		<option>154</option>
-		<option>288</option>
+		<option value="todas">Todas</option>
+		<% for(int i=0;i<lista2.size();i++){
+			 %>
+			<option value="<%= lista2.get(i) %>"><%=lista2.get(i)%></option>
+		 <%}%>
 	</select>
 	<br>
 	<br>
 	<b>Seleccione tipo de transaccion: </b>
 	<select name="tipo">
-		<option>Todas</option>
-		<option>Transferencias</option>
-		<option>Pago Cuotas</option>
-		<option>Prestamos</option>
+		<option value="transferencia">Transferencias</option>
+		<option value="pago prestamo">Pago Cuotas</option>
+		<option value="alta prestamo">Prestamos</option>
+		<option value="creacion de cuenta">Creacion Cuenta</option>
 	</select>
 	<br>
 	
@@ -53,22 +75,33 @@
 	<br>
 	<b>Cantidad de resultados: </b>
 	<b>10 </b>
-	<input type="radio" name="RdCant" checked>
+	<input type="radio" name="RdCant" value="10" checked>
 	<b>25 </b>
-	<input type="radio" name="RdCant">
+	<input type="radio" name="RdCant" value="25">
 	<b>50 </b>
-	<input type="radio" name="RdCant"> &nbsp;&nbsp;&nbsp; 
-	<input type="submit" name="Cargar" value="Generar"> 
+	<input type="radio" name="RdCant" value="50"> &nbsp;&nbsp;&nbsp; 
+	<input type="submit" name="Cargar3" value="Generar"> 
 </form>
 </div>
+<% 
+	ArrayList<Movimientos> listam = new ArrayList<Movimientos>();
+	if(request.getAttribute("lista")!=null)
+	{
+		listam=(ArrayList<Movimientos>) request.getAttribute("lista");
+	}
+	
+%>
 <div style="height: 100%;  width: 60%; float:right; text-align:right;">
 <table border="1" style="text-align: center;">
 	<tr><td>Fecha</td><td>Detalle</td><td>Importe</td><td>Tipo</td></tr>
-	<tr><td>02/06/2021</td><td>Pago cuota 2/6 prestamo</td><td>$2000</td><td>Pago Prestamo</td></tr>
-	<tr><td>15/05/2021</td><td>Tranferencia 154->212</td><td>$15000</td><td>Transferencia</td></tr>
-	<tr><td>03/05/2021</td><td>Pago cuota 1/6 prestamo</td><td>$2000</td><td>Pago Prestamo</td></tr>
-	<tr><td>12/04/2021</td><td>Deposito</td><td>$10000</td><td>Alta Prestamo</td></tr>
-	<tr><td>26/02/2021</td><td>Deposito</td><td>$10000</td><td>Alta Cuenta</td></tr>
+	<% 
+		for(Movimientos mov: listam)
+		{
+	%>
+	<tr> <td><%=mov.getFecha() %></td> <td><%=mov.getDetalle() %></td> <td><%=mov.getImporte() %></td> <td><%=mov.getTipo_Mov() %></td> </tr> 
+	<% 
+		}
+	%>
 </table>
 </div>
 </div>

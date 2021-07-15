@@ -1,11 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    
+     <%@page import="java.util.ArrayList"%>
+    <%@page import="datos.MovimientosDao"%>
+    <%@page import="datosImpl.MovimientosDaoImpl"%>
+    <%@page import="entidad.Movimientos"%>
+     <%@page import="datos.ClienteDao"%>
+	<%@page import="negocio.ClienteNeg"%>
+	<%@page import="negocioImpl.ClienteNegImpl"%>
+	<%@page import="java.sql.ResultSet"%>
+     <% 
+   	MovimientosDao o = new MovimientosDaoImpl();
+	ArrayList<Integer> lista2 = new ArrayList<Integer>();
+	lista2.addAll(o.CuentasHG("32078320"));
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@page import="java.util.ArrayList"%>
-<%@page import="datos.ClienteDao"%>
-<%@page import="negocio.ClienteNeg"%>
-<%@page import="negocioImpl.ClienteNegImpl"%>
-<%@page import="java.sql.ResultSet"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -17,7 +26,7 @@
 <h1>Historial de Movimientos</h1>
 <div style="display:flex; align-items: flex-end; width: 100%;">
 <div style="height: 100%; width: 40%; text-align:center; float:left;">
-<form action="Home.jsp" method="POST" style="text-align:center;">
+<form action="ServletMovimientos" method="post" style="text-align:center;">
 	<b>Seleecione una cuenta: </b>
 		<%  
 		ClienteNeg cliNeg = new ClienteNegImpl();
@@ -37,10 +46,9 @@
 	<br>
 	<b>Seleccione tipo de transaccion: </b>
 	<select name="tipo">
-		<option>Todas</option>
-		<option>Transferencias</option>
-		<option>Pago Cuotas</option>
-		<option>Prestamos</option>
+		<option value="transferencia">Transferencias</option>
+		<option value="pago prestamo">Pago Cuotas</option>
+		<option value="alta prestamo">Prestamos</option>
 	</select>
 	<br>
 	
@@ -57,22 +65,33 @@
 	<br>
 	<b>Cantidad de resultados: </b>
 	<b>10 </b>
-	<input type="radio" name="RdCant" checked>
+	<input type="radio" name="RdCant" value="10" checked>
 	<b>25 </b>
-	<input type="radio" name="RdCant">
+	<input type="radio" name="RdCant" value="25">
 	<b>50 </b>
-	<input type="radio" name="RdCant"> &nbsp;&nbsp;&nbsp; 
-	<input type="submit" name="Cargar" value="Generar"> 
+	<input type="radio" name="RdCant" value="50"> &nbsp;&nbsp;&nbsp; 
+	<input type="submit" name="Cargar4" value="Generar"> 
 </form>
 </div>
+<% 
+	ArrayList<Movimientos> listam = new ArrayList<Movimientos>();
+	if(request.getAttribute("lista")!=null)
+	{
+		listam=(ArrayList<Movimientos>) request.getAttribute("lista");
+	}
+	
+%>
 <div style="height: 100%;  width: 60%; float:right; text-align:right;">
 <table border="1" style="text-align: center;">
 	<tr><td>Fecha</td><td>Detalle</td><td>Importe</td><td>Tipo</td></tr>
-	<tr><td>02/06/2021</td><td>Pago cuota 2/6 prestamo</td><td>$2000</td><td>Pago Prestamo</td></tr>
-	<tr><td>15/05/2021</td><td>Tranferencia 154->212</td><td>$15000</td><td>Transferencia</td></tr>
-	<tr><td>03/05/2021</td><td>Pago cuota 1/6 prestamo</td><td>$2000</td><td>Pago Prestamo</td></tr>
-	<tr><td>12/04/2021</td><td>Deposito</td><td>$10000</td><td>Alta Prestamo</td></tr>
-	<tr><td>26/02/2021</td><td>Deposito</td><td>$10000</td><td>Alta Cuenta</td></tr>
+	<% 
+		for(Movimientos mov: listam)
+		{
+	%>
+	<tr> <td><%=mov.getFecha() %></td> <td><%=mov.getDetalle() %></td> <td><%=mov.getImporte() %></td> <td><%=mov.getTipo_Mov() %></td> </tr> 
+	<% 
+		}
+	%>
 </table>
 </div>
 </div>

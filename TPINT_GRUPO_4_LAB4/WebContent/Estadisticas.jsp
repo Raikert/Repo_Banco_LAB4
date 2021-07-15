@@ -126,6 +126,11 @@
 	}else
 	{
 		prestamos.add(0);
+		prestamos.add(0);
+		prestamos.add(0);
+		prestamos.add(0);
+		prestamos.add(0);
+		prestamos.add(0);
 	 }%>
 <br>
 <b>Cantidad Prestamos: </b><b><%=prestamos.get(0)%></b>
