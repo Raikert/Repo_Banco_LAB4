@@ -13,6 +13,24 @@ public class ClienteDaoImpl implements ClienteDao{
 
 	private Conexion cn;
 	
+	@Override
+	public ResultSet obtenerCuentas(String dni) {
+		ResultSet rs2 = null;
+		cn = new Conexion();
+		cn.Open();
+		try {
+			 rs2 = cn.query("Select cuentas.Ncuenta_Cu FROM cuentas WHERE cuentas.DNI_Cu = '" + dni +"'");
+			 return rs2;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		
+		return null;
+		
+	}
+	
 	public Cliente obtenerUsuarioContraseña(String usuario, String contraseña) 
 	{
 		cn = new Conexion();
@@ -21,8 +39,12 @@ public class ClienteDaoImpl implements ClienteDao{
 		Cliente cli = new Cliente();
 		try
 		{
-			ResultSet rs = cn.query("Select clientes.Usuario_Cli, clientes.Contraseña_Cli from clientes where clientes.Usuario_Cli='"+usuario+"' && clientes.Contraseña_Cli='"+contraseña+"'");
+			ResultSet rs = cn.query("Select clientes.DNI_Cli, clientes.Nombre_Cli, clientes.Apellido_Cli,clientes.Usuario_Cli, clientes.Contraseña_Cli from clientes where clientes.Usuario_Cli='"+usuario+"' && clientes.Contraseña_Cli='"+contraseña+"'");
 			rs.next();
+			
+			cli.setDni(rs.getString("clientes.DNI_Cli"));
+			cli.setNombre(rs.getString("clientes.Nombre_Cli"));
+			cli.setApellido(rs.getString("clientes.Apellido_Cli"));
 			cli.setUsuario(rs.getString("clientes.Usuario_Cli"));
 			cli.setContraseña(rs.getString("clientes.Contraseña_Cli"));
 			 
