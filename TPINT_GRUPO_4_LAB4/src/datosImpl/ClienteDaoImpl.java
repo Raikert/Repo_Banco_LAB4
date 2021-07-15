@@ -91,8 +91,6 @@ public class ClienteDaoImpl implements ClienteDao{
 				+ cliente.getProvincia() + "', CorreoE_Cli='" + cliente.getCorreo_electronico() + "', Telefono_Cli='" + cliente.getTelefono() + "', Contraseña_Cli='" 
 				+ cliente.getContraseña() + "', Estado_Cli=" + cliente.getEstado() + " where DNI_Cli='" + cliente.getDni() + "'";
 		
-		System.out.println(query);
-		
 		cn.execute(query);
 		cn.close();
 	}

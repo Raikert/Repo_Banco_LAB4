@@ -145,11 +145,14 @@ public class ServletClientes extends HttpServlet
 			
 			boolean [] error_count = {true, false, false, false, false};
 			
-			if(cliNeg.buscar_Coincidencia("Cuil_Cli" , request.getParameter("TxtCuil").toString()))
+			if(!cliente.getCuil().equals(request.getParameter("TxtCuil")))
 			{
-				error_count[0] = false;
-				error_count[2] = true;
-				cliente.setCuil("");
+				if(cliNeg.buscar_Coincidencia("Cuil_Cli" , request.getParameter("TxtCuil").toString()))
+				{	
+					error_count[0] = false;
+					error_count[2] = true;
+					cliente.setCuil("");
+				}
 			}
 			
 			if(!request.getParameter("TxtPass").equals(request.getParameter("TxtPass2")))

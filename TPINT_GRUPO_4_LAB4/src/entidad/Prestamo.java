@@ -99,13 +99,13 @@ public class Prestamo {
 	public String getFecha() {
 		return new SimpleDateFormat("dd/MM/yyyy").format(this.fecha);
 	}
-
-	public Date getFechaDate() {
-		return fecha;
-	}
 	
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+
+	public Date getFechaDate() {
+		return fecha;
 	}
 
 	public String getEstado() {

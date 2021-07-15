@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import datos.*;
 import datosImpl.*;
+import entidad.Cliente;
 import entidad.Prestamo;
 import negocio.PrestamoNeg;
 import negocioImpl.PrestamoNegImpl;
@@ -167,6 +168,21 @@ public class ServletPrestamos extends HttpServlet {
 			}
 			request.setAttribute("mensaje", mensaje);
 			RequestDispatcher rd = request.getRequestDispatcher("Prestamos.jsp");
+			rd.forward(request, response);
+		}
+		
+		if(request.getParameter("generar") != null)
+		{
+			ArrayList<Prestamo> prestamos_cliente = new ArrayList<Prestamo>();
+			prestamos_cliente = prestamo.obtenerPrestamosCli(request.getParameter("DNI_Cliente"), request.getParameter("cuenta"));
+			
+			if(!prestamos_cliente.isEmpty()) 
+			{
+				request.setAttribute("historial_prestamos", prestamos_cliente);
+			}
+				
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/PrestamoPedido.jsp");
 			rd.forward(request, response);
 		}
 	}

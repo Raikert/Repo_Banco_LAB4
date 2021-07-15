@@ -12,7 +12,7 @@ import java.util.List;
 import datos.*;
 
 
-
+import entidad.Cliente;
 import entidad.Prestamo;
 
 public class PrestamoDaoImpl implements PrestamoDao{
@@ -387,7 +387,56 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		return (int)(n/c);
 	}
 
-	
+	public void cargar_Prestamo(Prestamo prestamo, ResultSet rs)
+	{
+		try
+		{
+			prestamo.setFecha(rs.getDate("fecha_Pr"));
+			prestamo.setPlazo(rs.getDate("plazo_pago_Pr"));
+			prestamo.setEstado(rs.getString("estado_Pr"));
+			prestamo.setImportePedido(rs.getDouble("importe_Ped_Pr"));
+			prestamo.setImportePagar(rs.getDouble("importe_Int_Pr"));
+			prestamo.setMontoxMes(rs.getDouble("montoxMes_Pr"));
+			prestamo.setCuotas(rs.getInt("cuotas_Pr"));
+			prestamo.setCuotasPagadas(rs.getInt("cuota_pagada_Pr"));
+		}
+		catch(SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public ArrayList<Prestamo> obtenerPrestamosCli(String DNI, String Cuenta) 
+	{
+		ArrayList<Prestamo> prestamos = new ArrayList<Prestamo>();
+		
+		String consulta = "Select * from Prestamos where DNI_Pr='" + DNI + "' and NCuenta_Pr=" + Cuenta;
+		
+		cn = new Conexion();
+		cn.Open();
+		
+		ResultSet rs = cn.query(consulta);
+		try 
+		{
+			while(rs.next())
+			{
+				Prestamo prestamo = new Prestamo();
+				cargar_Prestamo(prestamo, rs);
+				prestamos.add(prestamo);
+			}
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		
+		return prestamos;
+	}
 	
 	
 }

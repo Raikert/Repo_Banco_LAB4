@@ -72,7 +72,9 @@ public class PrestamoNegImpl implements PrestamoNeg {
 		return prDao.Promedio(ini, fin, monmin, monmax, cuotas);
 	}
 
-	
-	
-	
+	@Override
+	public ArrayList<Prestamo> obtenerPrestamosCli(String DNI, String Cuenta) 
+	{
+		return prDao.obtenerPrestamosCli(DNI, Cuenta);
+	}
 }
