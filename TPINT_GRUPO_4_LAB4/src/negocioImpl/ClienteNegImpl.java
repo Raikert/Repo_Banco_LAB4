@@ -1,5 +1,6 @@
 package negocioImpl;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,13 @@ public class ClienteNegImpl implements ClienteNeg
 {
 	public ClienteDaoImpl cdao = new ClienteDaoImpl();
 			
+	@Override
+	public ResultSet obtenerCuentas(String dni) {
+		
+		return cdao.obtenerCuentas(dni);
+	}
+	
+	
 	@Override
 	public Cliente obtenerUsuarioContraseña(String usuario, String contraseña) {
 		
