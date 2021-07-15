@@ -69,10 +69,13 @@ public class ServletClientes extends HttpServlet
 					Cliente y = new Cliente();
 					x.setUsuario(request.getParameter("user"));
 					x.setContraseña(request.getParameter("pass"));
+					
 					y = cliNeg.obtenerUsuarioContraseña(x.getUsuario(), x.getContraseña());
 					
 					if (y.getUsuario().equals(request.getParameter("user")) && y.getContraseña().equals(request.getParameter("pass"))) 
 					{
+						request.getSession().setAttribute("useruser", y.getNombre() +" " + y.getApellido());
+						request.getSession().setAttribute("dnidni",y.getDni());
 						RequestDispatcher dispatcher = request.getRequestDispatcher("Home.jsp");
 						dispatcher.forward(request, response);
 					}
