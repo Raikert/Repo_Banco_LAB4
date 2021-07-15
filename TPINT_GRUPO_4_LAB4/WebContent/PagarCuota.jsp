@@ -5,6 +5,7 @@
 <%@page import="datos.ClienteDao"%>
 <%@page import="negocio.ClienteNeg"%>
 <%@page import="negocioImpl.ClienteNegImpl"%>
+<%@page import="datosImpl.PrestamoDaoImpl"%>
 <%@page import="java.sql.ResultSet"%>
 <html>
 <head>
@@ -18,23 +19,22 @@
 <br>
 <div style="display:flex; align-items: flex-end; width: 100%;">
 <div style="height: 100%; width: 40%; text-align:center; float:left;">
-<form action="Home.jsp" method="POST" style="text-align:center;">
-<b>Seleccione Prestamo: </b>	
+<form action="servletcuotas" method="GET" style="text-align:center;">
+<b>Seleccione Cuenta: </b>	
 		<%  
 		ClienteNeg cliNeg = new ClienteNegImpl();
 		ResultSet rs = null;
 		rs = cliNeg.obtenerCuentas(request.getSession().getAttribute("dnidni").toString());
 		
 		%>
-	<select>
-		<option> seleccione una cuenta  </option>
+	<select name="cuenta">
+		<option> seleccione una cuenta a debitar:  </option>
 		<%
 		while(rs.next()){
 		%>
 		<option value="<%=rs.getInt("Ncuenta_Cu")%>"><%=rs.getInt("Ncuenta_Cu")%> </option>
 		<% } %>
 	</select>
-<input type="submit" name="generar" value="Consulta">
 <br>
 <br>
 <b>Seleccione cuotas a pagar: </b>
@@ -42,16 +42,18 @@
 	<option>1</option>
 	<option>2</option>
 	<option>3</option>
-	<option>4</option>
-	<option>5</option>
 </select>
 <br>
 <br>
-<b>Seleccione cuenta a debitar:</b>
-<select name="cuenta">
-	<option>108</option>
-	<option>154</option>
-	<option>288</option>
+<b>Seleccione Prestamo a pagar:</b>
+<%PrestamoDaoImpl prest = new PrestamoDaoImpl();
+ResultSet rs2 = null;
+rs2= prest.obtenerIDPrestamosPagar(request.getSession().getAttribute("dnidni").toString());
+%>
+<select name="prestamo">
+<%while (rs2.next()){ %>
+	<option><%=rs2.getInt("ID_Pr") %></option>
+<%} %>
 </select>
 <br>
 <br>
@@ -60,10 +62,14 @@
 </div>
 <div style="height: 100%;  width: 60%; float:right; text-align:right;">
 <table border="1" style="text-align: center;">
-	<tr><td>ID</td><td>Importe</td><td>Cuotas pendientes</td><td>Valor cuota</td></tr>
-	<tr><td>15560</td><td>$100.000</td><td>6</td><td>$10.000</td></tr>
-	<tr><td>11255</td><td>$80.000</td><td>2</td><td>$8.000</td></tr>
-	<tr><td>03814</td><td>$150.000</td><td>1</td><td>$30.000</td></tr>
+<%PrestamoDaoImpl prest2 = new PrestamoDaoImpl();
+ResultSet rs3 =null;
+rs3=prest2.obtenerPrestamosPagar(request.getSession().getAttribute("dnidni").toString());
+%>
+	<tr><td>ID</td><td>Importe</td><td>Cuotas totales</td><td>Valor cuota</td><td>Cuotas Pagadas</td></tr>
+	<%while(rs3.next()){ %>
+	<tr><td><%=rs3.getInt("ID_Pr")%></td><td><%=rs3.getFloat("importe_Int_Pr") %></td><td><%=rs3.getString("cuotas_Pr") %></td><td><%=rs3.getFloat("montoxMes_Pr") %></td><td><%=rs3.getString("Cuota_pagada_Pr") %></td></tr>
+	<%} %>
 </table>
 </div>
 </div>

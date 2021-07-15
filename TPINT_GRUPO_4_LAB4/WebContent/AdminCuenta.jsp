@@ -44,6 +44,12 @@ if(request.getAttribute("cantfilas")!=null)
  filas = Integer.parseInt(request.getAttribute("cantfilas").toString());
 
 %>
+
+<%if (filas==1){
+	%>
+	Cuenta creada exitosamente
+	<%} %>
+
 </div>
 <div style="height: 100%;  width: 50%; float:right; text-align:center;">
 <form action="ServletCuentas" method="get">

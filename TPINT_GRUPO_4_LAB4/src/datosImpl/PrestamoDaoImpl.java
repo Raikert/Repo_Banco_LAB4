@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import datos.*;
@@ -436,6 +437,67 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		}
 		
 		return prestamos;
+	}
+	
+	public ResultSet obtenerIDPrestamosPagar(String dni) {
+		ResultSet rs2 = null;
+		cn = new Conexion();
+		cn.Open();
+		try {
+			 rs2 = cn.query("Select prestamos.ID_Pr FROM prestamos WHERE prestamos.DNI_Pr = '" + dni +"'");
+			 return rs2;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		
+		return null;
+		
+	}
+	
+	public ResultSet obtenerPrestamosPagar(String dni) {
+		ResultSet rs2 = null;
+		cn = new Conexion();
+		cn.Open();
+		try {
+			 rs2 = cn.query("Select ID_Pr,importe_Int_Pr,cuotas_Pr,Cuota_pagada_Pr,montoxMes_Pr  FROM prestamos WHERE prestamos.DNI_Pr = '" + dni +"' and estado_Pr = 'pendiente'");
+			 return rs2;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		
+		return null;
+		
+	}
+	
+	public int modificarCuenta(int cuotas, int idprestamo, int cuenta)
+	{
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	
+		int filas=0;
+		Connection con = null;
+		try
+		{
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/FINAL_LAB_4","root","root");
+			Statement st = con.createStatement();
+			String query = "update prestamos set cuota_pagada_Pr = cuota_pagada_Pr + "+cuotas+ " where ID_Pr = "+idprestamo;
+			filas=st.executeUpdate(query);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return filas;
 	}
 	
 	
