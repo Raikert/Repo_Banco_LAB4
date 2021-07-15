@@ -10,6 +10,8 @@ import entidad.Cliente;
 public interface ClienteDao 
 {
 	public Cliente obtenerUsuarioContraseña(String usuario,String contraseña);
+	public ResultSet obtenerCuentas(String dni);
+	
 	public void agregarCliente (Cliente cliente);
 	public void cargar_Cliente(Cliente cliente, ResultSet rs);
 	public Cliente Buscar_DNI (Cliente cliente);
