@@ -47,10 +47,10 @@ public class ServletPrestamos extends HttpServlet {
 			}
 			String estado = request.getParameter("estado");
 			boolean exito=false;
-			for (Prestamo p : prestamosPendientes) {
-				if (id==p.getId()) {
+			prestamosPendientes = prestamo.obtenerPendientes();
+			for (Prestamo pr : prestamosPendientes) {
+				if (pr.getId() == id) {
 					exito = prestamo.cambiarEstado(id, estado);
-					
 				}
 			}
 			if(exito) {
@@ -58,8 +58,6 @@ public class ServletPrestamos extends HttpServlet {
 			} else {
 				request.setAttribute("label", "Ingrese un ID de un prestamo pendiente existente");
 			}
-			prestamosPendientes = prestamo.obtenerPendientes();
-			request.setAttribute("lista", prestamosPendientes);
 			RequestDispatcher rd = request.getRequestDispatcher("/GestorPrestamos.jsp");
 			rd.forward(request, response);
 		}
@@ -118,13 +116,6 @@ public class ServletPrestamos extends HttpServlet {
 			rd.forward(request, response);
 		}
 		
-		if(request.getParameter("btnCargar")!=null) {
-			prestamosPendientes = prestamo.obtenerPendientes();
-			request.setAttribute("lista", prestamosPendientes);
-			RequestDispatcher rd = request.getRequestDispatcher("/GestorPrestamos.jsp");
-			rd.forward(request, response);
-		}
-		
 		if(request.getParameter("btnCalcular")!=null){
 			int cuotas = 0;
 			double importe_pedido = 0, importe_pagar = 0, montoxmes = 0;
@@ -145,19 +136,23 @@ public class ServletPrestamos extends HttpServlet {
 		if(request.getParameter("btnEnviar")!=null) {
 			int cuotas= 0, nCuenta = 0;
 			double importe_pedido = 0, importe_pagar = 0, montoxmes = 0;
+			Boolean f1 = false,f2 = false,f3 = false;
 			String mensaje;
-			if(request.getParameter("cuenta")!=null && request.getParameter("cuenta")!="") {
+			if(request.getParameter("cuenta")!=null && request.getParameter("cuenta")!="" && request.getParameter("cuenta")!= "seleccione una cuenta") {
 				nCuenta = Integer.parseInt(request.getParameter("cuenta"));
+				f1 = true;
 			}
 			if(request.getParameter("cuotas")!=null && request.getParameter("cuotas")!="") {
 				cuotas = Integer.parseInt(request.getParameter("cuotas"));
+				f2 = true;
 			}
 			if(request.getParameter("txtMonto")!=null && request.getParameter("txtMonto")!="") {
 				importe_pedido = Double.parseDouble(request.getParameter("txtMonto"));
+				f3 = true;
 			}
 			importe_pagar = importe_pedido * 1.30; //30% de intereses ?
 			montoxmes = importe_pagar/cuotas;
-			if(importe_pedido!=0) {
+			if(importe_pedido>=0 && f1 && f2 && f3) {
 			if (prestamo.agregarPrestamo(nCuenta, importe_pedido, cuotas, importe_pagar, montoxmes)) {
 				mensaje = "La solicitud del prestamo se realizo con exito!";
 			} else {

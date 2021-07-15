@@ -34,7 +34,7 @@
 		</select>
 		<br><br>
 		<b>Ingrese Monto a pedir: $</b>
-		<input type="text" name="txtMonto">
+		<input type="text" name="txtMonto" pattern="[0-9]+" title="Igrese un dato numerico" request>
 		<br><br>
 		<b>Seleccione cantidad cuotas: </b>
 		<select name="cuotas">
