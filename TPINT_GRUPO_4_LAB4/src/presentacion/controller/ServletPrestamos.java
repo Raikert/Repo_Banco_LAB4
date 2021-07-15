@@ -123,6 +123,52 @@ public class ServletPrestamos extends HttpServlet {
 			RequestDispatcher rd = request.getRequestDispatcher("/GestorPrestamos.jsp");
 			rd.forward(request, response);
 		}
+		
+		if(request.getParameter("btnCalcular")!=null){
+			int cuotas = 0;
+			double importe_pedido = 0, importe_pagar = 0, montoxmes = 0;
+			if(request.getParameter("cuotas")!=null) {
+				cuotas = Integer.parseInt(request.getParameter("cuotas"));
+			}
+			if(request.getParameter("txtMonto")!=null) {
+				importe_pedido = Double.parseDouble(request.getParameter("txtMonto"));
+			}
+			importe_pagar = importe_pedido * 1.30; //30% de intereses ?
+			montoxmes = importe_pagar/cuotas;
+			request.setAttribute("importe_pagar", importe_pagar);
+			request.setAttribute("montoxmes", montoxmes);
+			RequestDispatcher rd = request.getRequestDispatcher("Prestamos.jsp");
+			rd.forward(request, response);
+		}
+		
+		if(request.getParameter("btnEnviar")!=null) {
+			int cuotas= 0, nCuenta = 0;
+			double importe_pedido = 0, importe_pagar = 0, montoxmes = 0;
+			String mensaje;
+			if(request.getParameter("cuenta")!=null && request.getParameter("cuenta")!="") {
+				nCuenta = Integer.parseInt(request.getParameter("cuenta"));
+			}
+			if(request.getParameter("cuotas")!=null && request.getParameter("cuotas")!="") {
+				cuotas = Integer.parseInt(request.getParameter("cuotas"));
+			}
+			if(request.getParameter("txtMonto")!=null && request.getParameter("txtMonto")!="") {
+				importe_pedido = Double.parseDouble(request.getParameter("txtMonto"));
+			}
+			importe_pagar = importe_pedido * 1.30; //30% de intereses ?
+			montoxmes = importe_pagar/cuotas;
+			if(importe_pedido!=0) {
+			if (prestamo.agregarPrestamo(nCuenta, importe_pedido, cuotas, importe_pagar, montoxmes)) {
+				mensaje = "La solicitud del prestamo se realizo con exito!";
+			} else {
+				mensaje = "Error al solicitar el prestamo";
+			}
+			} else {
+				mensaje = "Error al solicitar el prestamo";
+			}
+			request.setAttribute("mensaje", mensaje);
+			RequestDispatcher rd = request.getRequestDispatcher("Prestamos.jsp");
+			rd.forward(request, response);
+		}
 	}
 
 }

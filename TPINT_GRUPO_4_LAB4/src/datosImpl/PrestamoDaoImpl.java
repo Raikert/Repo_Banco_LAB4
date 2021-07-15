@@ -18,9 +18,9 @@ import entidad.Prestamo;
 public class PrestamoDaoImpl implements PrestamoDao{
 	
 	Conexion cn = new Conexion();
-	private static final String obtenerPendientes= "SELECT * FROM banco.prestamos WHERE estado_Pr = 'pendiente'";
+	private static final String obtenerPendientes= "SELECT * FROM final_lab_4.PRESTAMOS WHERE estado_Pr = 'pendiente'";
 	private static final String modificarEstado= "CALL Modificar_Estado_Prestamo(?,?)";
-	private static final String agregarPrestamo="CALL Nuevo_Prestamo(?,?,?,?,?,?,?)";
+	private static final String agregarPrestamo="CALL Nuevo_Prestamo(?,?,?,?,?)";
 	
 	private static final String todosc= "CALL Contar_Cantidad_Prestamos_Cuotas(?,?,?,?,?)";
 	private static final String todos= "CALL Contar_Cantidad_Prestamos(?,?,?,?)";
@@ -90,12 +90,10 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		try {
 			CallableStatement cst = c.prepareCall(agregarPrestamo);
 			cst.setInt(1, p.getCuenta());
-			cst.setString(2, Integer.toString(p.getDni()));
-			cst.setDate(3, p.getFechaDate());
-			cst.setDouble(4, p.getImportePagar());
-			cst.setDouble(5, p.getImportePedido());
-			cst.setDouble(6, p.getMontoxMes());
-			cst.setInt(7, p.getCuotas());
+			cst.setDouble(2, p.getImportePagar());
+			cst.setDouble(3, p.getImportePedido());
+			cst.setDouble(4, p.getMontoxMes());
+			cst.setInt(5, p.getCuotas());
 			cst.execute();
 			b=true;
 		} catch (Exception e) {

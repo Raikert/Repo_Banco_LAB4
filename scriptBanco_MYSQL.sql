@@ -49,7 +49,7 @@ CREATE TABLE PRESTAMOS
     fecha_Pr date NULL,
     importe_Int_Pr decimal(13,2) NOT NULL,
     importe_Ped_Pr decimal(13,2) NOT NULL,
-    plazo_pago_Pr date NOT NULL,
+    plazo_pago_Pr date NOT NULL default '000-00-00',
     montoxMes_Pr decimal(13,2) NOT NULL,
     cuotas_Pr varchar(43) NOT NULL,
     cuota_pagada_Pr varchar(43) NULL DEFAULT '0',
@@ -86,13 +86,23 @@ CREATE PROCEDURE `Nuevo_Prestamo` (IN NCuenta INT(11), IN importe_Int DECIMAL(13
 BEGIN
 
 	DECLARE DNI varchar(20);
+    DECLARE fecha DATE;
     
 	SELECT DNI_Cu INTO DNI
     FROM CUENTAS
     WHERE NCuenta_Cu = NCuenta;
     
-	INSERT INTO PRESTAMOS(NCuenta_Pr, DNI_Pr, importe_Int_Pr, importe_Ped_Pr, plazo_pago_Pr, montoxmes_Pr, cuotas_Pr, cuota_pagada_Pr, estado_Pr)
-    VALUE (NCuenta, DNI, importe_Int, importe_Ped, DATE_ADD(fecha, INTERVAL cuotas month), montoxmes, cuotas, '0', 'pendiente') ;
+	INSERT INTO PRESTAMOS(NCuenta_Pr, DNI_Pr, importe_Int_Pr, importe_Ped_Pr, montoxmes_Pr, cuotas_Pr, cuota_pagada_Pr, estado_Pr)
+    VALUE (NCuenta, DNI, importe_Int, importe_Ped, montoxmes, cuotas, '0', 'pendiente');
+    
+    SELECT fecha_Pr INTO fecha
+    FROM PRESTAMOS
+    ORDER BY ID_Pr DESC
+    LIMIT 1;
+    
+    UPDATE final_lab_4.prestamos SET plazo_pago_Pr = date_add(fecha_Pr, INTERVAL cuotas MONTH)
+    ORDER BY ID_Pr DESC
+    LIMIT 1;
 
 END$$
 
