@@ -57,6 +57,18 @@ CREATE TABLE PRESTAMOS
     CONSTRAINT PK_ID_Pr PRIMARY KEY (ID_Pr)
 );
 
+CREATE TABLE movimientos 
+(
+ID_Movimientos int AUTO_INCREMENT,
+Fecha date not null,
+Detalle varchar(30),
+Importe decimal(10,2),
+Tipo_Movimiento varchar(30),
+Origen varchar(10),
+Destino varchar(10),
+PRIMARY KEY (ID_Movimientos)
+);
+
 ALTER TABLE PRESTAMOS
 ADD CONSTRAINT FK_PRESTAMOS_CUENTAS FOREIGN KEY (Ncuenta_Pr)
 REFERENCES CUENTAS (NCuenta_Cu);
@@ -257,3 +269,15 @@ VALUES ('32078320','Cuenta corriente','275485725845'), ('32078320','Caja de ahor
 INSERT INTO PRESTAMOS(Ncuenta_Pr,DNI_Pr, importe_Int_Pr, importe_Ped_Pr, plazo_pago_Pr, montoxMes_Pr, cuotas_Pr)
 VALUES ('1','32078320','260000','200000','2022-1-12','43333','6'),('2','32078320','65000','50000','2022-7-12','5416.33','12')
 ,('3','32078320','97500','75000','2022-7-12','8125','12');
+
+INSERT INTO movimientos (Fecha,Detalle,Importe,Tipo_Movimiento,Origen,Destino)
+VALUES ('2021-01-20','creacion de cuenta',10000.00,'Alta cuenta','0','2'),
+		('2021-01-28','alta prestamo',50000.00,'alta prestamo','0','1'),
+        ('2021-02-01','pago prestamo',10000.00,'pago prestamo','1','0'),
+        ('2021-03-12','transferencia',10000.00,'transferencia','1','2'),
+        ('2021-05-20','transferencia',20000.00,'Alta cuenta','2','1'),
+		('2021-02-05','alta prestamo',50000.00,'alta prestamo','0','1'),
+        ('2021-11-13','pago prestamo',10000.00,'pago prestamo','1','0'),
+        ('2021-08-07','transferencia',35000.00,'transferencia','1','2'),
+        ('2021-11-02','transferencia',85000.00,'transferencia','2','3'),
+        ('2021-05-22','transferencia',25320.00,'Alta cuenta','0','2');
