@@ -25,7 +25,6 @@
 <form action="ServletMovimientos" method="post" style="text-align:center;">
 	<b>Seleciones un cliente: </b>
 	<select name="cliente">
-		<option value="todos">Todos</option>
 		<% for(int i=0;i<lista.size();i++){
 			 %>
 			<option value="<%= lista.get(i) %>"><%=lista.get(i)%></option>
@@ -45,7 +44,6 @@
 	%>
 	<b>Selecione una cuenta: </b>
 	<select name="cuenta">
-		<option value="todas">Todas</option>
 		<% for(int i=0;i<lista2.size();i++){
 			 %>
 			<option value="<%= lista2.get(i) %>"><%=lista2.get(i)%></option>

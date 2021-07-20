@@ -34,7 +34,7 @@
 		rs = cliNeg.obtenerCuentas(request.getSession().getAttribute("dnidni").toString());
 		
 		%>
-	<select>
+	<select name="cuenta">
 		<option> seleccione una cuenta  </option>
 		<%
 		while(rs.next()){
