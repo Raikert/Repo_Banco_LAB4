@@ -1,5 +1,5 @@
 ##Ejecutar lo siguiente para dropear la base de datos y cargarla devuelta
-##DROP database FINAL_LAB_4;
+#DROP database FINAL_LAB_4;
 
 
 Create database FINAL_LAB_4;
@@ -73,7 +73,7 @@ ALTER TABLE PRESTAMOS
 ADD CONSTRAINT FK_PRESTAMOS_CUENTAS FOREIGN KEY (Ncuenta_Pr)
 REFERENCES CUENTAS (NCuenta_Cu);
 
-##PROCEDIMIENTOS ALMACENADOS
+########################################################PROCEDIMIENTOS ALMACENADOS
 
 DELIMITER $$
 CREATE PROCEDURE `Obtener_DNI_Segun_Cuenta`(IN NCuenta INT(11))
@@ -116,6 +116,14 @@ BEGIN
     ORDER BY ID_Pr DESC
     LIMIT 1;
 
+END$$
+
+CREATE PROCEDURE  `Nuevo_Movimiento`(in detalle varchar(30), in importe decimal(10,2), in tipo varchar(30), in origen varchar(10), in destino varchar(10))
+BEGIN
+
+	INSERT INTO movimientos(Detalle, Importe, Tipo_Movimiento, Origen, Destino)
+    VALUE (detalle, importe, tipo, origen, destino);
+	
 END$$
 
 CREATE PROCEDURE `Contar_Cantidad_Prestamos_Cuotas` (IN ini DATE, in fin DATE, IN monmin DECIMAL(13,2), IN monmax DECIMAL(13,2), IN cuotas VARCHAR(43))
@@ -217,17 +225,32 @@ BEGIN
 
 END$$
 
-##TRIGGERS
+
+###############################################################################TRIGGERS
 
 CREATE TRIGGER `FINAL_LAB_4`.`PRESTAMOS_AFTER_UPDATE` AFTER UPDATE ON `PRESTAMOS` FOR EACH ROW
 BEGIN
 	IF NEW.estado_Pr = 'aprobado'
 		THEN
 			CALL Sumar_Prestamo_A_Saldo(NEW.importe_Ped_Pr, NEW.Ncuenta_Pr);
-            ##Agregar procedimiento para que al mismo tiempo que se ingresa la suma de dinero
-            ##se crean los registros para la tabla cuotas paga
+            CALL Nuevo_Movimiento('Dinero otorgado por prestamo',NEW.importe_Ped_Pr, 'alta prestamo', '0',NEW.Ncuenta_Pr);
+	END IF;
+
+END$$
+
+CREATE TRIGGER `FINAL_LAB_4`.`PAGO_PRESTAMO` AFTER UPDATE ON `PRESTAMOS` FOR EACH ROW
+BEGIN
+	IF NEW.cuota_pagada_Pr > OLD.cuota_pagada_Pr
+		THEN
+            CALL Nuevo_Movimiento('Pago de cuota de prestamo',NEW.montoxmes_Pr, 'pago de prestamo', NEW.Ncuenta_Pr,'0');
 	END IF;
 END$$
+
+CREATE TRIGGER `FINAL_LAB_4`.`ALTA_CUENTA` AFTER INSERT ON `CUENTAS` FOR EACH ROW
+BEGIN
+	CALL Nuevo_Movimiento('Creacion de cuenta', '10000.00','alta cuenta','0',NEW.NCuenta_Cu);
+END$$
+
 
 CREATE TRIGGER `FINAL_LAB_4`.`CUENTAS_SET_FECHA` BEFORE INSERT ON `CUENTAS` 
 FOR EACH ROW 
@@ -237,7 +260,27 @@ CREATE TRIGGER `FINAL_LAB_4`.`PRESTAMOS_SET_FECHA` BEFORE INSERT ON `PRESTAMOS`
 FOR EACH ROW 
 SET NEW.fecha_Pr = IFNULL(NEW.Fecha_Pr,NOW());
 
-##INSERTS
+CREATE TRIGGER `FINAL_LAB_4`.`MOVIMIENTOS_SET_FECHA` BEFORE INSERT ON `MOVIMIENTOS` 
+FOR EACH ROW 
+SET NEW.Fecha = IFNULL(NEW.Fecha,NOW());
+
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `cuentas_BEFORE_INSERT` BEFORE INSERT ON `cuentas` FOR EACH ROW BEGIN
+ if((select COUNT(DNI_Cu)  from cuentas where DNI_Cu = new.DNI_Cu) >=3)then
+ SIGNAL SQLSTATE '45000'
+ SET MESSAGE_TEXT = 'ERROR';
+ end if;
+ end$$
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `PAGADO_AFTER_UPDATE` BEFORE UPDATE ON `prestamos` FOR EACH ROW BEGIN
+IF (NEW.cuota_pagada_Pr >= NEW.cuotas_Pr )
+THEN
+SET NEW.estado_Pr = 'Pagado' ;
+end if;
+end$$
+
+#######################################################################################INSERTS
+
 insert into Clientes (DNI_Cli, CUIL_Cli, Nombre_Cli, Apellido_Cli, Sexo_Cli, Nacionalidad_Cli, 
 Fecha_Nac_Cli, Direccion_Cli, Localidad_Cli, Provincia_Cli, CorreoE_Cli, Telefono_Cli, 
 Usuario_Cli, Contraseña_Cli, Estado_Cli) 
@@ -270,14 +313,15 @@ INSERT INTO PRESTAMOS(Ncuenta_Pr,DNI_Pr, importe_Int_Pr, importe_Ped_Pr, plazo_p
 VALUES ('1','32078320','260000','200000','2022-1-12','43333','6'),('2','32078320','65000','50000','2022-7-12','5416.33','12')
 ,('3','32078320','97500','75000','2022-7-12','8125','12');
 
+
 INSERT INTO movimientos (Fecha,Detalle,Importe,Tipo_Movimiento,Origen,Destino)
-VALUES ('2021-01-20','creacion de cuenta',10000.00,'Alta cuenta','0','2'),
-		('2021-01-28','alta prestamo',50000.00,'alta prestamo','0','1'),
-        ('2021-02-01','pago prestamo',10000.00,'pago prestamo','1','0'),
+VALUES ('2021-01-20','creacion de cuenta',10000.00,'alta cuenta','0','2'),
+		('2021-01-28','Dinero otorgado por prestamo',50000.00,'alta prestamo','0','1'),
+        ('2021-02-01','Pago de cuota de prestamo',10000.00,'pago prestamo','1','0'),
         ('2021-03-12','transferencia',10000.00,'transferencia','1','2'),
-        ('2021-05-20','transferencia',20000.00,'Alta cuenta','2','1'),
-		('2021-02-05','alta prestamo',50000.00,'alta prestamo','0','1'),
-        ('2021-11-13','pago prestamo',10000.00,'pago prestamo','1','0'),
+        ('2021-05-20','creacion de cuenta',20000.00,'alta cuenta','2','1'),
+		('2021-02-05','Dinero otorgado por prestamo',50000.00,'alta prestamo','0','1'),
+        ('2021-11-13','Pago de cuota de prestamo',10000.00,'pago prestamo','1','0'),
         ('2021-08-07','transferencia',35000.00,'transferencia','1','2'),
         ('2021-11-02','transferencia',85000.00,'transferencia','2','3'),
-        ('2021-05-22','transferencia',25320.00,'Alta cuenta','0','2');
+        ('2021-05-22','transferencia',25320.00,'transferencia','0','2');
