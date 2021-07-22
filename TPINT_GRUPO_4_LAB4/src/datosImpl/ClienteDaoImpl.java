@@ -8,10 +8,222 @@ import javax.servlet.http.HttpServletRequest;
 
 import datos.ClienteDao;
 import entidad.Cliente;
+import entidad.Movimientos;
 
 public class ClienteDaoImpl implements ClienteDao{
 
 	private Conexion cn;
+	
+	
+	@Override
+	public boolean grabarMovimiento(Movimientos mov) {
+		boolean estado=true;
+
+		cn = new Conexion();
+		cn.Open();	
+
+		String query = "INSERT INTO movimientos (Fecha,Detalle,Importe,Tipo_Movimiento,Origen,Destino) VALUES ('"+ mov.getFecha() +"','"+mov.getDetalle()+"',"+mov.getImporte()+",'"+mov.getTipo_Mov()+"', '"+mov.getOrigen()+"','"+mov.getDestino()+"')";
+		System.out.println(query);
+		try
+		 {
+			estado=cn.execute(query);
+		 }
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return estado;
+		
+		
+	}
+
+	@Override
+	public boolean actualizarCuentas(Float saldo,String cuenta) {
+		boolean estado=true;
+
+		cn = new Conexion();
+		cn.Open();	
+
+		String query = "UPDATE  cuentas SET cuentas.Saldo_Cu= cuentas.Saldo_Cu+'"+saldo+"' WHERE cuentas.Ncuenta_Cu='"+cuenta+"'";
+		try
+		 {
+			estado=cn.execute(query);
+		 }
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return estado;
+	}
+	
+	
+	@Override
+	public boolean actualizarCuentas2(Float saldo,String cuenta) {
+		boolean estado=true;
+
+		cn = new Conexion();
+		cn.Open();	
+
+		String query = "UPDATE  cuentas SET cuentas.Saldo_Cu= cuentas.Saldo_Cu-'"+saldo+"' WHERE cuentas.Ncuenta_Cu='"+cuenta+"'";
+		try
+		 {
+			estado=cn.execute(query);
+		 }
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return estado;
+	}
+
+	
+	
+	@Override
+	public String comprobarSaldo(String cuenta) {
+		cn = new Conexion();
+		cn.Open();
+		
+		String saldo="0";
+		
+		try
+		{
+			ResultSet rs = cn.query("select cuentas.Saldo_Cu FROM cuentas WHERE cuentas.Ncuenta_Cu ='"+cuenta+"'");
+			rs.next();
+			
+			saldo = Float.toString(rs.getFloat("cuentas.Saldo_Cu"));
+			 
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return saldo;
+		
+	}
+
+
+
+
+
+
+	@Override
+	public String comprobarCuenta(String cuenta) {
+		cn = new Conexion();
+		cn.Open();
+		
+		String cuentas="0";
+		
+		try
+		{
+			ResultSet rs = cn.query("select cuentas.Ncuenta_Cu FROM cuentas WHERE cuentas.Ncuenta_Cu ='"+cuenta+"'");
+			rs.next();
+			
+			cuentas = Integer.toString(rs.getInt("cuentas.Ncuenta_Cu"));
+			 
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return cuentas;
+	}
+
+
+
+
+
+
+	@Override
+	public ArrayList<Movimientos> obtenerMovimientosCuenta(String cuenta) {
+		
+		cn = new Conexion();
+		cn.Open();
+		
+		
+		ArrayList<Movimientos> lista = new ArrayList<Movimientos>();
+		
+		try
+		{
+			ResultSet rs = cn.query("select movimientos.Fecha, movimientos.Detalle, movimientos.Importe, movimientos.Tipo_Movimiento FROM movimientos WHERE movimientos.Origen='"+cuenta+"'");
+			rs.next();
+			
+			Movimientos mov = new Movimientos();
+			mov.setFecha(rs.getDate("movimientos.Fecha"));
+			mov.setDetalle(rs.getString("movimientos.Detalle"));
+			mov.setImporte(rs.getDouble("movimientos.Importe"));
+			mov.setTipo_Mov(rs.getString("movimientos.Tipo_Movimiento"));
+			
+			lista.add(mov);
+			
+			 
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return lista;
+		
+		
+	}
+	
+
+	
+	
+	
+
+	@Override
+	public String obtenerSaldoCuenta(String cuenta) {
+		cn = new Conexion();
+		cn.Open();
+		
+		String saldo="0";
+		
+		try
+		{
+			ResultSet rs = cn.query("select cuentas.Saldo_Cu FROM cuentas WHERE cuentas.Ncuenta_Cu='"+cuenta+"'");
+			rs.next();
+			saldo = Float.toString(rs.getFloat("cuentas.Saldo_Cu"));
+		
+			
+			 
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			cn.close();
+		}
+		return saldo;
+	}
+
+
+	
 	
 	@Override
 	public ResultSet obtenerCuentas(String dni) {
