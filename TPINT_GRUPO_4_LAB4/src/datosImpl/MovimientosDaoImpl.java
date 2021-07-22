@@ -229,6 +229,7 @@ public class MovimientosDaoImpl implements MovimientosDao  {
 		
 		PreparedStatement statement;
 		Connection conexion = Conexion2.getConexion().getSQLConexion();
+		lista.clear();
 		try
 		{
 			statement = conexion.prepareStatement(bhistorialg);
