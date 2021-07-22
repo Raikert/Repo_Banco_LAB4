@@ -165,15 +165,17 @@ public class ClienteDaoImpl implements ClienteDao{
 		try
 		{
 			ResultSet rs = cn.query("select movimientos.Fecha, movimientos.Detalle, movimientos.Importe, movimientos.Tipo_Movimiento FROM movimientos WHERE movimientos.Origen='"+cuenta+"'");
-			rs.next();
 			
-			Movimientos mov = new Movimientos();
-			mov.setFecha(rs.getDate("movimientos.Fecha"));
-			mov.setDetalle(rs.getString("movimientos.Detalle"));
-			mov.setImporte(rs.getDouble("movimientos.Importe"));
-			mov.setTipo_Mov(rs.getString("movimientos.Tipo_Movimiento"));
-			
-			lista.add(mov);
+			while(rs.next()) {
+				Movimientos mov = new Movimientos();
+				mov.setFecha(rs.getDate("movimientos.Fecha"));
+				mov.setDetalle(rs.getString("movimientos.Detalle"));
+				mov.setImporte(rs.getDouble("movimientos.Importe"));
+				mov.setTipo_Mov(rs.getString("movimientos.Tipo_Movimiento"));
+				
+				lista.add(mov);				
+			}
+
 			
 			 
 		}
