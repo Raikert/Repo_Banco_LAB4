@@ -1,4 +1,4 @@
-##Ejecutar lo siguiente para dropear la base de datos y cargarla devuelta
+﻿##Ejecutar lo siguiente para dropear la base de datos y cargarla devuelta
 #DROP database FINAL_LAB_4;
 
 
@@ -275,7 +275,7 @@ CREATE DEFINER=`root`@`localhost` TRIGGER `cuentas_BEFORE_INSERT` BEFORE INSERT 
 CREATE DEFINER=`root`@`localhost` TRIGGER `PAGADO_AFTER_UPDATE` BEFORE UPDATE ON `prestamos` FOR EACH ROW BEGIN
 IF (NEW.cuota_pagada_Pr >= NEW.cuotas_Pr )
 THEN
-SET NEW.estado_Pr = 'Pagado' ;
+SET NEW.estado_Pr = 'pago' ;
 end if;
 end$$
 
