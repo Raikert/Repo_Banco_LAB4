@@ -117,18 +117,31 @@ public class ServletPrestamos extends HttpServlet {
 		}
 		
 		if(request.getParameter("btnCalcular")!=null){
-			int cuotas = 0;
+			Prestamo p = new Prestamo();
+			int cuotas = 0, nCuenta = 0;
 			double importe_pedido = 0, importe_pagar = 0, montoxmes = 0;
-			if(request.getParameter("cuotas")!=null) {
+			Boolean f1 = false,f2 = false;
+			if(request.getParameter("cuenta")!="") {
+				nCuenta = Integer.parseInt(request.getParameter("cuenta"));
+			}
+			if(request.getParameter("cuotas")!=null && request.getParameter("cuotas")!="") {
 				cuotas = Integer.parseInt(request.getParameter("cuotas"));
+				f1 = true;
 			}
-			if(request.getParameter("txtMonto")!=null) {
+			if(request.getParameter("txtMonto")!=null && request.getParameter("txtMonto")!="") {
 				importe_pedido = Double.parseDouble(request.getParameter("txtMonto"));
+				f2 = true;
 			}
-			importe_pagar = importe_pedido * 1.30; //30% de intereses ?
+			importe_pagar = importe_pedido * 1.30; 
 			montoxmes = importe_pagar/cuotas;
-			request.setAttribute("importe_pagar", importe_pagar);
-			request.setAttribute("montoxmes", montoxmes);
+			if(f1 && f2) {
+				Prestamo pres = new Prestamo(0,0,nCuenta);
+				pres.setImportePedido(importe_pedido);
+				pres.setImportePagar(importe_pagar);
+				pres.setMontoxMes(montoxmes);
+				pres.setCuotas(cuotas);
+			request.setAttribute("prestamo", pres);
+			}
 			RequestDispatcher rd = request.getRequestDispatcher("Prestamos.jsp");
 			rd.forward(request, response);
 		}
@@ -150,7 +163,7 @@ public class ServletPrestamos extends HttpServlet {
 				importe_pedido = Double.parseDouble(request.getParameter("txtMonto"));
 				f3 = true;
 			}
-			importe_pagar = importe_pedido * 1.30; //30% de intereses ?
+			importe_pagar = importe_pedido * 1.30;
 			montoxmes = importe_pagar/cuotas;
 			if(importe_pedido>=0 && f1 && f2 && f3) {
 			if (prestamo.agregarPrestamo(nCuenta, importe_pedido, cuotas, importe_pagar, montoxmes)) {

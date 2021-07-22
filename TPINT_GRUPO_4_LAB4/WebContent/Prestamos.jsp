@@ -6,6 +6,7 @@
 <%@page import="datos.ClienteDao"%>
 <%@page import="negocio.ClienteNeg"%>
 <%@page import="negocioImpl.ClienteNegImpl"%>
+<%@page import="entidad.Prestamo" %>
 <%@page import="java.sql.ResultSet"%>
 <html>
 	<head>
@@ -14,6 +15,8 @@
 	<body>
 	<jsp:include page="Menu2.html"></jsp:include>
 	<center>
+	
+	<%! int [] cuotas = {6, 12, 18, 24, 36}; %>
 	<h1>Solicitar Prestamos</h1>
 	<br>
 	<form method="post" action="ServletPrestamos">
@@ -24,43 +27,62 @@
 		rs = cliNeg.obtenerCuentas(request.getSession().getAttribute("dnidni").toString());
 		
 		%>
+		
+		<%
+		Prestamo p;
+		if(request.getAttribute("prestamo")!=null){
+			p = (Prestamo) request.getAttribute("prestamo");
+		} else {
+			p = new Prestamo(0,0,0);
+				p.setImportePedido(0);
+				p.setImportePagar(0);
+				p.setCuotas(0);
+				p.setMontoxMes(0);
+		}
+	
+	 %>
 		<select name="cuenta">
-			<option> seleccione una cuenta  </option>
+			<option value = ""></option>
 			<%
 			while(rs.next()){
+				if(rs.getInt("Ncuenta_Cu")==p.getCuenta()){
 			%>
+			<option value="<%=rs.getInt("Ncuenta_Cu")%>" selected><%=rs.getInt("Ncuenta_Cu")%> </option>
+			<% } else {
+					%>
 			<option value="<%=rs.getInt("Ncuenta_Cu")%>"><%=rs.getInt("Ncuenta_Cu")%> </option>
-			<% } %>
+				<% 
+			}
+			
+			} %>
 		</select>
 		<br><br>
 		<b>Ingrese Monto a pedir: $</b>
-		<input type="text" name="txtMonto" pattern="[0-9]+" title="Igrese un dato numerico" request>
+		<input type="text" name="txtMonto" pattern="[0-9]+" title="Igrese un dato numerico" value=<%=p.getImportePedido() %> request>
 		<br><br>
 		<b>Seleccione cantidad cuotas: </b>
 		<select name="cuotas">
-			<option>6</option>
-			<option>12</option>
-			<option>18</option>
-			<option>24</option>
-			<option>36</option>
+		<% 
+			for(int cuota : cuotas){
+				if(cuota == p.getCuotas()) {
+				%>
+				<option selected> <%=cuota%></option>
+				<% 
+				} else {
+				%>
+				<option> <%=cuota%></option>
+				<%
+				}
+			}
+			%>
 		</select>&nbsp;
 		<input type="submit" name="btnCalcular" value="Calcular interes">
 		<br><br>
-		<%!Double importe_pagar = 0.00; %>
-			<%
-				if(request.getAttribute("importe_pagar")!=null){
-					importe_pagar = (Double) request.getAttribute("importe_pagar");
-				}
-			 %>
-		<b>Monto total a pagar: $</b>&nbsp;<b><%= importe_pagar %></b>
+		
+		<b>Monto total a pagar: $</b>&nbsp;<b><%= p.getImportePagar() %></b>
 		<br><br>
-		<%!Double montoxmes = 0.00; %>
-			<%
-				if(request.getAttribute("montoxmes")!=null){
-					montoxmes = (Double) request.getAttribute("montoxmes");
-				}
-			 %>
-		<b>Monto por cuota: $</b>&nbsp;<b><%= montoxmes %></b>
+		
+		<b>Monto por cuota: $</b>&nbsp;<b><%= p.getMontoxMes() %></b>
 		<br><br>
 		<input type="submit" name="btnEnviar" value="Enviar Solicitud">
 		<br>

@@ -11,6 +11,33 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<style>
+	table
+	{
+		margin:auto;
+		display:block;
+		max-width:600px;
+		max-height:200px;
+		overflow-y: auto;
+		border-style: inset;
+        border-width: 5px;
+		border-color:#229941;
+		border-collapse:collapse;
+		background-color:#a3998c;
+		
+	}
+	th
+	{
+		background-color:#f0c711;
+		border:1px solid black;
+	}
+	td
+	{
+		background-color:white;
+		border:1px solid black;
+		padding:5px 10px;
+	}
+</style>
 	</head>
 	<body>
 	<jsp:include page="Menu.html"></jsp:include>
