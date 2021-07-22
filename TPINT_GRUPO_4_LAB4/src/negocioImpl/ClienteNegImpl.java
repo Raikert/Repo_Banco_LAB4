@@ -7,11 +7,62 @@ import javax.servlet.http.HttpServletRequest;
 
 import datosImpl.ClienteDaoImpl;
 import entidad.Cliente;
+import entidad.Movimientos;
 import negocio.ClienteNeg;
 
 public class ClienteNegImpl implements ClienteNeg
 {
 	public ClienteDaoImpl cdao = new ClienteDaoImpl();
+	
+	
+
+	@Override
+	public boolean actualizarCuentas2(Float saldo, String cuenta) {
+		
+		return cdao.actualizarCuentas2(saldo, cuenta);
+	}
+
+
+	@Override
+	public boolean actualizarCuentas(Float saldo, String cuenta) {
+		return cdao.actualizarCuentas(saldo, cuenta);
+		
+	}
+
+
+	@Override
+	public boolean grabarMovimiento(Movimientos mov) {
+		return cdao.grabarMovimiento(mov);
+
+	}
+
+
+	@Override
+	public String comprobarSaldo(String cuenta) {
+		return cdao.comprobarSaldo(cuenta);
+	}
+
+
+	@Override
+	public String comprobarCuenta(String cuenta) {
+		return cdao.comprobarCuenta(cuenta);
+	}
+
+
+	@Override
+	public ArrayList<Movimientos> obtenerMovimientosCuenta(String cuenta) {
+		
+		return cdao.obtenerMovimientosCuenta(cuenta);
+	}
+
+
+	@Override
+	public String obtenerSaldoCuenta(String cuenta) {
+		
+		return cdao.obtenerSaldoCuenta(cuenta);
+	}
+
+	
 			
 	@Override
 	public ResultSet obtenerCuentas(String dni) {
