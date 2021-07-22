@@ -444,7 +444,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		cn = new Conexion();
 		cn.Open();
 		try {
-			 rs2 = cn.query("Select prestamos.ID_Pr FROM prestamos WHERE prestamos.DNI_Pr = '" + dni +"'");
+			 rs2 = cn.query("Select prestamos.ID_Pr FROM prestamos WHERE prestamos.DNI_Pr = '" + dni +"' AND estado_Pr = 'aprobado'");
 			 return rs2;
 		}
 		catch (Exception e) {
@@ -461,7 +461,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		cn = new Conexion();
 		cn.Open();
 		try {
-			 rs2 = cn.query("Select ID_Pr,importe_Int_Pr,cuotas_Pr,Cuota_pagada_Pr,montoxMes_Pr  FROM prestamos WHERE prestamos.DNI_Pr = '" + dni +"' and estado_Pr = 'pendiente'");
+			 rs2 = cn.query("Select ID_Pr,importe_Int_Pr,cuotas_Pr,Cuota_pagada_Pr,montoxMes_Pr  FROM prestamos WHERE prestamos.DNI_Pr = '" + dni +"' and estado_Pr = 'aprobado'");
 			 return rs2;
 		}
 		catch (Exception e) {
@@ -498,6 +498,79 @@ public class PrestamoDaoImpl implements PrestamoDao{
 			e.printStackTrace();
 		}
 		return filas;
+	}
+	
+	
+	public int RestarSaldoCuenta(int cuotas, int idprestamo, int cuenta)
+	{
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	
+		int filas=0;
+		Connection con = null;
+		try
+		{
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/FINAL_LAB_4","root","root");
+			Statement st = con.createStatement();
+			String query = "update cuentas set Saldo_Cu = Saldo_Cu-((select montoxMes_Pr from prestamos where ID_Pr ="+idprestamo+")*"+cuotas+") where Ncuenta_Cu="+cuenta;
+			filas=st.executeUpdate(query);
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return filas;
+	}
+	
+	
+	public float obtenerSaldocuentaApagar(int cuenta) {
+		ResultSet rs2 = null;
+		float saldo = 0;
+		cn = new Conexion();
+		cn.Open();
+		try {
+			 rs2 = cn.query("Select Saldo_Cu  FROM cuentas WHERE cuentas.Ncuenta_cu ="+cuenta);
+			 while (rs2.next()) {
+			 saldo = rs2.getFloat("Saldo_Cu");
+			 }
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		
+		return saldo;
+		
+	}
+	
+	
+	public float obtenerImporteApagar(int prestamo) {
+		ResultSet rs2 = null;
+		float importe = 0;
+		cn = new Conexion();
+		cn.Open();
+		try {
+			
+			 rs2 = cn.query("Select montoxMes_Pr  FROM prestamos WHERE prestamos.ID_Pr ="+prestamo);
+			 while (rs2.next()) {
+			 importe = rs2.getFloat("montoxMes_Pr");
+			 }
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		
+		return importe;
+		
 	}
 	
 	

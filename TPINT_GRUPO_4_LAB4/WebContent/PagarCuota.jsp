@@ -27,12 +27,11 @@
 		rs = cliNeg.obtenerCuentas(request.getSession().getAttribute("dnidni").toString());
 		
 		%>
-	<select name="cuenta">
-		<option> seleccione una cuenta a debitar:  </option>
+	<select name="cuenta">		
 		<%
 		while(rs.next()){
 		%>
-		<option value="<%=rs.getInt("Ncuenta_Cu")%>"><%=rs.getInt("Ncuenta_Cu")%> </option>
+		<option><%=rs.getInt("Ncuenta_Cu")%> </option>
 		<% } %>
 	</select>
 <br>
@@ -58,6 +57,17 @@ rs2= prest.obtenerIDPrestamosPagar(request.getSession().getAttribute("dnidni").t
 <br>
 <br>
 <input type="submit" name="pagar" value="pagar" style="width:150px">
+<%
+int filas = 1;
+if(request.getAttribute("cantfilas")!=null)
+ filas = Integer.parseInt(request.getAttribute("cantfilas").toString());
+
+%>
+
+<%if (filas==0){
+	%>
+	No se puedo realizar el pago
+	<%} %>
 </form>
 </div>
 <div style="height: 100%;  width: 60%; float:right; text-align:right;">

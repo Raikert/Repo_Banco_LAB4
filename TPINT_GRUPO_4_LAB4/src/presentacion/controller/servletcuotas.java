@@ -29,17 +29,25 @@ public class servletcuotas extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int filas=0;
+		
 		if(request.getParameter("pagar")!=null){
-			
+			int filas=0;
 			int cuota=0;
 			int idprestamos=0;
 			int cuentas=0;
+			float saldo= 0;
+			float importe= 0; 
 			cuota=Integer.parseInt(request.getParameter("cuotas"));
 			idprestamos=Integer.parseInt(request.getParameter("prestamo"));
 			cuentas=Integer.parseInt(request.getParameter("cuenta"));
 			PrestamoDaoImpl prest = new PrestamoDaoImpl();
-			filas=prest.modificarCuenta(cuota, idprestamos, cuentas);
+			saldo=prest.obtenerSaldocuentaApagar(cuentas);
+			importe= prest.obtenerImporteApagar(idprestamos)*cuota;
+				
+				if (saldo>=importe) {
+				filas=prest.RestarSaldoCuenta(cuota, idprestamos, cuentas);
+				filas=prest.modificarCuenta(cuota, idprestamos, cuentas);
+				}
 			request.setAttribute("cantfilas", filas);
 			RequestDispatcher rd = request.getRequestDispatcher("/PagarCuota.jsp");
 			rd.forward(request, response);
