@@ -23,7 +23,7 @@
 <br>
 <br>
 <b>Ingrese Dni del cliente:&nbsp;&nbsp; </b>
-<input type="text" name="TxtDni" style="width:100px">
+<input type="text" name="TxtDni" style="width:100px" required>
 <br>
 <br>
 <b>Ingrese tipo cuenta: </b>
@@ -34,7 +34,7 @@
 <br>
 <br>
 <b>Ingrese CBU: </b>
-<input type="text" name="TxtCbu">
+<input type="text" name="TxtCbu" required>
 <br>
 <br>
 <input type="submit" name="crear" value="Crear">
@@ -80,7 +80,7 @@ listacuentas= Ucu.obtenerCuentas();
 <br>
 <br>
 <b>Ingrese CBU: </b>
-<input type="text" name="TxtCbu2">
+<input type="text" name="TxtCbu2" required>
 <br>
 <br>
 <input type="submit" name="Modificar" value="Modificar">
