@@ -1,6 +1,7 @@
 package presentacion.controller;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import entidad.Cliente;
+import entidad.Movimientos;
 import negocioImpl.ClienteNegImpl;
 import negocio.ClienteNeg;
 
@@ -54,6 +56,84 @@ public class ServletClientes extends HttpServlet
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
+		
+		
+		if (request.getParameter("BTcargar")!=null) {
+			
+			if (request.getParameter("ddlCuentas")!="seleccione una cuenta") {
+				
+				String saldo = cliNeg.obtenerSaldoCuenta(request.getParameter("ddlCuentas"));
+				request.getSession().setAttribute("cuentaElegida", request.getParameter("ddlCuentas"));
+				request.getSession().setAttribute("saldosaldo", saldo);
+		    	RequestDispatcher dispatcher = request.getRequestDispatcher("Transferencias.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
+		
+		
+		if (request.getParameter("BTenviar")!=null) {
+			
+			if(request.getParameter("ddlCuentas")!="seleccione una cuenta") {
+				
+				try {
+					String cuenta = request.getParameter("TxtDestino");
+					float monto = Float.parseFloat(request.getParameter("TxtMonto"));
+					String cuenta2 = cliNeg.comprobarCuenta(cuenta);
+					float monto2 = Float.parseFloat(cliNeg.comprobarSaldo(request.getSession().getAttribute("cuentaElegida").toString()));
+
+					
+					if (cuenta.equals(cuenta2) && Float.compare(monto,monto2)<=0) {
+						
+						
+						
+						Movimientos mov = new Movimientos();
+						
+						mov.setFecha(Date.valueOf("2021-07-22"));
+						mov.setDetalle("transferencia");
+						mov.setImporte(monto);
+						mov.setTipo_Mov("transferencia");
+						mov.setOrigen(request.getSession().getAttribute("cuentaElegida").toString());
+						mov.setDestino(cuenta);
+						
+						cliNeg.grabarMovimiento(mov);
+						cliNeg.actualizarCuentas(monto, cuenta);
+						cliNeg.actualizarCuentas2(monto, request.getSession().getAttribute("cuentaElegida").toString());
+						
+						
+						
+					}
+					
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				RequestDispatcher dispatcher = request.getRequestDispatcher("Transferencias.jsp");
+				dispatcher.forward(request, response);
+				
+			}
+		}
+		
+		if (request.getParameter("BTgenerar")!=null) {
+			
+			if(request.getParameter("ddlCuentas")!="seleccione una cuenta") {
+				
+				
+				
+				ArrayList<Movimientos> lista  = cliNeg.obtenerMovimientosCuenta(request.getParameter("ddlCuentas"));
+				String saldo = cliNeg.obtenerSaldoCuenta(request.getParameter("ddlCuentas"));
+				
+				request.setAttribute("movimientosmovimientos", lista);
+				request.setAttribute("saldosaldo", saldo);
+				
+		    	RequestDispatcher dispatcher = request.getRequestDispatcher("Home.jsp");
+				dispatcher.forward(request, response);
+				
+			}
+			
+		}
+		
+		
 		if (request.getParameter("BtLogin")!=null)
 		{
 			if (request.getParameter("user").equals("admin") && request.getParameter("pass").equals("admin")) 
