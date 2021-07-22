@@ -15,7 +15,7 @@
 <center>
 <h1>Transferencias</h1>
 <br>
-<form action="">
+<form action="ServletClientes" method="post">
 <b>Seleccione una cuenta: </b>
 		<%  
 		ClienteNeg cliNeg = new ClienteNegImpl();
@@ -23,7 +23,7 @@
 		rs = cliNeg.obtenerCuentas(request.getSession().getAttribute("dnidni").toString());
 		
 		%>
-	<select>
+	<select name="ddlCuentas" id="ddlCuentas">
 		<option> seleccione una cuenta  </option>
 		<%
 		while(rs.next()){
@@ -31,10 +31,19 @@
 		<option value="<%=rs.getInt("Ncuenta_Cu")%>"><%=rs.getInt("Ncuenta_Cu")%> </option>
 		<% } %>
 	</select>
-<input type="submit" style="width: 100px" name="cargar" value="Cargar">
+<input type="submit" style="width: 100px" name="BTcargar" value="Cargar">
 <br>
 <br>
-<b>Saldo: $</b>&nbsp;<b>1500</b>
+
+<% 
+if(request.getSession().getAttribute("saldosaldo")==null){
+	
+	request.getSession().setAttribute("saldosaldo", "");
+}
+
+
+%>
+<b>Saldo: $</b>&nbsp;<b><%=request.getSession().getAttribute("saldosaldo") %></b>
 <br>
 <br>
 <b>Ingrese una cuenta destino: </b>
@@ -45,7 +54,7 @@
 <input type="text" name="TxtMonto">
 <br>
 <br>
-<input type="submit" name="Enviar" value="Transferir">
+<input type="submit" name="BTenviar" value="Transferir">
 </form>
 </center>
 </body>
