@@ -444,7 +444,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		cn = new Conexion();
 		cn.Open();
 		try {
-			 rs2 = cn.query("Select prestamos.ID_Pr FROM prestamos WHERE prestamos.DNI_Pr = '" + dni +"' AND estado_Pr = 'aprobado'");
+			 rs2 = cn.query("Select prestamos.ID_Pr FROM prestamos WHERE prestamos.DNI_Pr = '" + dni +"' AND estado_Pr = 'aprobado' OR estado_Pr = 'pagando'");
 			 return rs2;
 		}
 		catch (Exception e) {
@@ -461,7 +461,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		cn = new Conexion();
 		cn.Open();
 		try {
-			 rs2 = cn.query("Select ID_Pr,importe_Int_Pr,cuotas_Pr,Cuota_pagada_Pr,montoxMes_Pr  FROM prestamos WHERE prestamos.DNI_Pr = '" + dni +"' and estado_Pr = 'aprobado'");
+			 rs2 = cn.query("Select ID_Pr,importe_Int_Pr,cuotas_Pr,Cuota_pagada_Pr,montoxMes_Pr  FROM prestamos WHERE prestamos.DNI_Pr = '" + dni +"' and estado_Pr = 'aprobado' OR estado_Pr = 'pagando'");
 			 return rs2;
 		}
 		catch (Exception e) {
@@ -490,7 +490,7 @@ public class PrestamoDaoImpl implements PrestamoDao{
 		{
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/FINAL_LAB_4","root","root");
 			Statement st = con.createStatement();
-			String query = "update prestamos set cuota_pagada_Pr = cuota_pagada_Pr + "+cuotas+ " where ID_Pr = "+idprestamo;
+			String query = "update prestamos set cuota_pagada_Pr = cuota_pagada_Pr + "+cuotas+ ",estado_Pr = 'pagando' where ID_Pr = "+idprestamo;
 			filas=st.executeUpdate(query);
 		}
 		catch(Exception e)
