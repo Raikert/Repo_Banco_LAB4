@@ -54,9 +54,9 @@
 	<b>Seleccione tipo de transaccion: </b>
 	<select name="tipo">
 		<option value="transferencia">Transferencias</option>
-		<option value="pago prestamo">Pago Cuotas</option>
+		<option value="pago de prestamo">Pago Cuotas</option>
 		<option value="alta prestamo">Prestamos</option>
-		<option value="creacion de cuenta">Creacion Cuenta</option>
+		<option value="alta cuenta">Creacion Cuenta</option>
 	</select>
 	<br>
 	
